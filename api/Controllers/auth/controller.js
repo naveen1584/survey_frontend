@@ -1,0 +1,225 @@
+const BaseController = require("../../Global/controller");
+const { Response } = require("../../Helpers/Response");
+const Sequelize = require("sequelize");
+const { createJWT, autoIncrementId } = require("../../Helpers/Utils");
+const sequelize = require("../../SequelizeConfig");
+const DBSequelize = require("../../Global/DBSequelizeConfig");
+const md5 = require("md5");
+const bcrypt = require("bcrypt");
+const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
+
+class authController extends BaseController {
+    constructor() {
+        super();
+    }
+
+    async createUser(req, res) {
+        try {
+            const { userFirstName, userLastName, userProfileName, userEmail, userPhone, userPassword, roleID } =
+                req.body;
+            const salt = await bcrypt.genSalt();
+            const hashPassword = await bcrypt.hash(userPassword, salt);
+            var obj = req.body;
+            var newObj = {};
+            var missing = {};
+            Object.keys(obj).forEach(function (key) {
+                if (obj[key] !== null && obj[key] !== "") {
+                    newObj[key] = obj[key];
+                } else {
+                    missing[key] = obj[key];
+                }
+            });
+            if (Object.keys(missing).length != 0) {
+                return Response(res)({
+                    message: "Missing values",
+                    statusCode: 400,
+                    response: { missingKeys: missing }
+                });
+            } else {
+                const checkQry = `SELECT * FROM users WHERE userEmail = '${userEmail}' AND isDeleted = 0`;
+                const checkRes = await DBSequelize.query(checkQry, { type: Sequelize.QueryTypes.SELECT });
+                if (checkRes.length > 0) {
+                    return Response(res)({
+                        message: "Email already registered!",
+                        statusCode: 400,
+                        response: {}
+                    });
+                } else {
+                    const insertQry = `
+                    INSERT INTO users( userFirstName, userLastName, userProfileName, userEmail,
+                        userPhone, userPassword, roleID, isDeleted,addedAt, addedBy)
+                        VALUES
+                        ('${userFirstName}','${userLastName}','${userProfileName}','${userEmail}',
+                        '${userPhone}','${hashPassword}','${roleID}',0,1,1)`;
+                    const result = await DBSequelize.query(insertQry, {
+                        type: Sequelize.QueryTypes.INSERT
+                    });
+                    return Response(res)({
+                        message: "User created successfully!",
+                        statusCode: 200,
+                        response: { result }
+                    });
+                }
+            }
+        } catch (error) {
+            return Response(res)({
+                message: "Failed",
+                statusCode: 400,
+                response: { error }
+            });
+        }
+    }
+
+    async getRoles(req, res) {
+        try {
+            const getQry = `SELECT * FROM userroles`;
+            const result = await DBSequelize.query(getQry, {
+                type: Sequelize.QueryTypes.SELECT
+            });
+            return Response(res)({
+                message: "Get successfully!",
+                statusCode: 200,
+                response: { result }
+            });
+        } catch (error) {
+            return Response(res)({
+                message: "Failed",
+                statusCode: 400,
+                response: { error }
+            });
+        }
+    }
+
+    async auth(req, res) {
+        try {
+            const { userEmail, userPassword } = req.body;
+            var obj = req.body;
+            var newObj = {};
+            var missing = {};
+            Object.keys(obj).forEach(function (key) {
+                if (obj[key] !== null && obj[key] !== "") {
+                    newObj[key] = obj[key];
+                } else {
+                    missing[key] = obj[key];
+                }
+            });
+            if (Object.keys(missing).length != 0) {
+                return Response(res)({
+                    message: "Missing values",
+                    statusCode: 400,
+                    response: { missingKeys: missing }
+                });
+            } else {
+                const getQry = `SELECT * FROM users WHERE userEmail = '${userEmail}' AND isDeleted = 0`;
+                const result = await DBSequelize.query(getQry, {
+                    type: Sequelize.QueryTypes.SELECT
+                });
+                if (result.length > 0) {
+                    const match = await bcrypt.compare(userPassword, result[0].userPassword);
+                    if (!match) {
+                        return Response(res)({
+                            message: "Invalid credentials. Please try again!",
+                            statusCode: 401,
+                            response: {}
+                        });
+                    } else {
+                        var token = createJWT(result);
+                        const insertToken = `UPDATE users SET refreshToken = '${token}' WHERE userEmail = '${userEmail}'`;
+                        const resultToken = await DBSequelize.query(insertToken, {
+                            type: Sequelize.QueryTypes.UPDATE
+                        });
+                        const detail = {
+                            userName: result[0].userName,
+                            userFirstName: result[0].userFirstName,
+                            userLastName: result[0].userLastName,
+                            userProfileName: result[0].userProfileName,
+                            userEmail: result[0].userEmail,
+                            userPhone: result[0].userPhone
+                        };
+                        return Response(res)({
+                            message: "Login successfully!",
+                            statusCode: 200,
+                            response: {
+                                detail: detail,
+                                userRole: result[0].roleID,
+                                token
+                            }
+                        });
+                    }
+                } else {
+                    return Response(res)({
+                        message: "Invalid Email. Please try again!",
+                        statusCode: 401,
+                        response: {}
+                    });
+                }
+            }
+        } catch (error) {
+            return Response(res)({
+                message: "Failed",
+                statusCode: 400,
+                response: { error }
+            });
+        }
+    }
+
+    async getUserByTypes(req, res) {
+        const { roleID } = req.params;
+        try {
+            const getQry = `SELECT * FROM users where roleID = '${roleID}' AND isDeleted = 0`;
+            const result = await DBSequelize.query(getQry, { type: Sequelize.QueryTypes.SELECT });
+            return Response(res)({
+                message: "Get successfully!",
+                statusCode: 200,
+                response: { result }
+            });
+        } catch (error) {
+            return Response(res)({
+                message: "Failed",
+                statusCode: 400,
+                response: { error }
+            });
+        }
+    }
+
+    async getUserByID(req, res) {
+        const { userId } = req.params;
+        try {
+            const getQry = `SELECT * FROM users WHERE userId = '${userId}' AND isDeleted = 0`;
+            const result = await DBSequelize.query(getQry, { type: Sequelize.QueryTypes.SELECT });
+            return Response(res)({
+                message: "Get successfully!",
+                statusCode: 200,
+                response: { result }
+            });
+        } catch (error) {
+            return Response(res)({
+                message: "Failed",
+                statusCode: 400,
+                response: { error }
+            });
+        }
+    }
+
+    async deleteUser(req, res) {
+        const { userId } = req.params;
+        try {
+            const getQry = `UPDATE users SET isDeleted = 0 WHERE userId = '${userId}'`;
+            const result = await DBSequelize.query(getQry, { type: Sequelize.QueryTypes.UPDATE });
+            return Response(res)({
+                message: "Deleted successfully!",
+                statusCode: 200,
+                response: { result }
+            });
+        } catch (error) {
+            return Response(res)({
+                message: "Failed",
+                statusCode: 400,
+                response: { error }
+            });
+        }
+    }
+}
+
+module.exports = new authController();
