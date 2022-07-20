@@ -62,8 +62,8 @@ const exceptionHandlingMiddleware = (fn) => (req, res, next) => {
 const autoIncrementId = (lastRecordId) => {
     var parts = lastRecordId.match(/[a-zA-Z]+|[0-9]+/g);
     var increasedNum = Number(lastRecordId.replace(parts[0], "")) + 1;
-    var kmsStr = lastRecordId.substr(0, 3);
-    for (let i = 0; i < 4 - increasedNum.toString().length; i++) {
+    var kmsStr = lastRecordId.substr(0, 2);
+    for (let i = 0; i < 3 - increasedNum.toString().length; i++) {
         kmsStr = kmsStr + "0";
     }
     kmsStr = kmsStr + increasedNum.toString();

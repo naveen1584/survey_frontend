@@ -1,39 +1,31 @@
 {
-    "id": 1,
     "surveyName": "abc",
+    "adminID": "1",
     "questions": [
         {
-            "id": 1,
             "question": "string",
             "options": [
                 {
-                    "id": 1,
                     "name": "abc"
                 },
                 {
-                    "id": 2,
                     "name": "abc"
                 },
                 {
-                    "id": 3,
                     "name": "abc"
                 }
             ]
         },
         {
-            "id": 2,
             "question": "string",
             "options": [
                 {
-                    "id": 1,
                     "name": "abc"
                 },
                 {
-                    "id": 2,
                     "name": "abc"
                 },
                 {
-                    "id": 3,
                     "name": "abc"
                 }
             ]

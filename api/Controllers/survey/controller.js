@@ -15,16 +15,42 @@ class SurveyController extends BaseController {
     }
 
     async createSurvey(req, res) {
-        const { surveyName, surveyQuestion, adminID, addedAt } = req.body;
+        const { data } = req.body;
         try {
-            const insertQry = `INSERT INTO survey(surveyName, surveyQuestion, adminID, addedAt) VALUES ('${surveyName}','${surveyQuestion}','${adminID}','${addedAt}')`;
+            const getIDQry = `SELECT surveyID FROM survey ORDER BY surveyID DESC LIMIT 1`;
+            const getIDRes = await DBSequelize.query(getIDQry, {
+                type: Sequelize.QueryTypes.SELECT
+            });
+            var latestID;
+            if (getIDRes.length > 0) {
+                latestID = autoIncrementId(getIDRes[0].surveyID);
+            } else {
+                latestID = "SR001";
+            }
+            const insertQry = `INSERT INTO survey(surveyID, surveyName, adminID) VALUES ('${latestID}','${data.surveyName}','${data.adminID}')`;
             const result = await DBSequelize.query(insertQry, {
                 type: Sequelize.QueryTypes.INSERT
             });
+            var questionArray = data.questions;
+            for (var i = 0; i < questionArray.length; i++) {
+                const insertQuestionQry = `INSERT INTO surveyquestion(surveyID, surveyQuestion, adminID) VALUES ('${latestID}','${questionArray[i].question}','${data.adminID}')`;
+                const insertQuestionRes = await DBSequelize.query(insertQuestionQry, {
+                    type: Sequelize.QueryTypes.INSERT
+                });
+                var optionArray = questionArray[i].options;
+                if (optionArray.length > 0) {
+                    for (var j = 0; j < optionArray.length; j++) {
+                        const insertOptionQry = `INSERT INTO surveydetail(surveyID, questionID, choiceQuestion, adminID) VALUES ('${latestID}','${insertQuestionRes[0]}','${optionArray[j].name}','${data.adminID}')`;
+                        const insertOptionRes = await DBSequelize.query(insertOptionQry, {
+                            type: Sequelize.QueryTypes.INSERT
+                        });
+                    }
+                }
+            }
             return Response(res)({
-                message: "Survey created!",
+                message: "Get Successfully",
                 statusCode: 200,
-                response: { result }
+                response: { latestID }
             });
         } catch (error) {
             return Response(res)({
