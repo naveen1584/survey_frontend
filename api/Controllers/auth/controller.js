@@ -16,7 +16,7 @@ class authController extends BaseController {
 
     async createUser(req, res) {
         try {
-            const { userFirstName, userLastName, userProfileName, userEmail, userPhone, userPassword, roleID } =
+            const { userFirstName, userLastName, userProfileName, DOB, userEmail, userPhone, userPassword, roleID } =
                 req.body;
             const salt = await bcrypt.genSalt();
             const hashPassword = await bcrypt.hash(userPassword, salt);
@@ -47,10 +47,10 @@ class authController extends BaseController {
                     });
                 } else {
                     const insertQry = `
-                    INSERT INTO users( userFirstName, userLastName, userProfileName, userEmail,
+                    INSERT INTO users( userFirstName, userLastName, userProfileName, DOB, userEmail,
                         userPhone, userPassword, roleID, isDeleted,addedAt, addedBy)
                         VALUES
-                        ('${userFirstName}','${userLastName}','${userProfileName}','${userEmail}',
+                        ('${userFirstName}','${userLastName}','${userProfileName}','${DOB}','${userEmail}',
                         '${userPhone}','${hashPassword}','${roleID}',0,1,1)`;
                     const result = await DBSequelize.query(insertQry, {
                         type: Sequelize.QueryTypes.INSERT
@@ -134,6 +134,7 @@ class authController extends BaseController {
                             userFirstName: result[0].userFirstName,
                             userLastName: result[0].userLastName,
                             userProfileName: result[0].userProfileName,
+                            userDOB: result[0].DOB,
                             userEmail: result[0].userEmail,
                             userPhone: result[0].userPhone
                         };

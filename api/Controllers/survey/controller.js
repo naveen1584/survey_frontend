@@ -61,15 +61,32 @@ class SurveyController extends BaseController {
         }
     }
 
+    async getSurvey(req, res) {
+        const { surveyID } = req.params;
+        try {
+            const getSurveyQry = ``;
+            const getSurveyRes = await DBSequelize.query(getSurveyQry, {
+                type: Sequelize.QueryTypes.SELECT
+            });
+        } catch (error) {
+            return Response(res)({
+                message: "Failed",
+                statusCode: 400,
+                response: { error }
+            });
+        }
+    }
+
     async getSurveys(req, res) {
         try {
             const getQry = `SELECT * FROM survey`;
             const result = await DBSequelize.query(getQry, { type: Sequelize.QueryTypes.SELECT });
-            return Response(res)({
-                message: "Get Successfully",
-                statusCode: 200,
-                response: { result }
-            });
+
+            // return Response(res)({
+            //     message: "Get Successfully",
+            //     statusCode: 200,
+            //     response: { result }
+            // });
         } catch (error) {
             return Response(res)({
                 message: "Failed",
