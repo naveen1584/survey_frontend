@@ -14,44 +14,40 @@ class SurveyController extends BaseController {
         super();
     }
 
-    async createSurvey(req, res) {
+    async createTakeSurvey(req, res) {
         const { data } = req.body;
         try {
-            const getIDQry = `SELECT surveyID FROM survey ORDER BY surveyID DESC LIMIT 1`;
-            const getIDRes = await DBSequelize.query(getIDQry, {
+            const getQry = `SELECT * FROM survey WHERE surveyID = '${data.surveyID}' AND isDeleted = 0`;
+            const getRes = await DBSequelize.query(getQry, {
                 type: Sequelize.QueryTypes.SELECT
             });
-            var latestID;
-            if (getIDRes.length > 0) {
-                latestID = autoIncrementId(getIDRes[0].surveyID);
-            } else {
-                latestID = "SR001";
-            }
-            const insertQry = `INSERT INTO survey(surveyID, surveyName, adminID) VALUES ('${latestID}','${data.surveyName}','${data.adminID}')`;
-            const result = await DBSequelize.query(insertQry, {
-                type: Sequelize.QueryTypes.INSERT
-            });
-            var questionArray = data.questions;
-            for (var i = 0; i < questionArray.length; i++) {
-                const insertQuestionQry = `INSERT INTO surveyquestion(surveyID, surveyQuestion, adminID) VALUES ('${latestID}','${questionArray[i].question}','${data.adminID}')`;
-                const insertQuestionRes = await DBSequelize.query(insertQuestionQry, {
+            if (getRes.length > 0) {
+                const insertQry = `INSERT INTO takesurvey (surveyID, surveyName, adminID, userID) VALUES ('${data.surveyID}','${data.surveyName}','${data.adminID}','${data.userID}')`;
+                const result = await DBSequelize.query(insertQry, {
                     type: Sequelize.QueryTypes.INSERT
                 });
-                var optionArray = questionArray[i].options;
-                if (optionArray.length > 0) {
-                    for (var j = 0; j < optionArray.length; j++) {
-                        const insertOptionQry = `INSERT INTO surveydetail(surveyID, questionID, choiceQuestion, adminID) VALUES ('${latestID}','${insertQuestionRes[0]}','${optionArray[j].name}','${data.adminID}')`;
-                        const insertOptionRes = await DBSequelize.query(insertOptionQry, {
-                            type: Sequelize.QueryTypes.INSERT
-                        });
-                    }
+
+                var questions = data.questions;
+
+                for (var i = 0; i < questions.length; i++) {
+                    const insertDetailQry = `INSERT INTO takesurveydetail (surveyID, surveyQuestion, surveyAnswer) VALUES ('${data.surveyID}','${questions[i].question}','${questions[i].answer}')`;
+                    const insertDetailRes = await DBSequelize.query(insertDetailQry, {
+                        type: Sequelize.QueryTypes.INSERT
+                    });
                 }
+
+                return Response(res)({
+                    message: "Survey take successfully!",
+                    statusCode: 200,
+                    response: { result }
+                });
+            } else {
+                return Response(res)({
+                    message: "No Survey against this ID",
+                    statusCode: 401,
+                    response: {}
+                });
             }
-            return Response(res)({
-                message: "Get Successfully",
-                statusCode: 200,
-                response: { latestID }
-            });
         } catch (error) {
             return Response(res)({
                 message: "Failed",
@@ -61,34 +57,26 @@ class SurveyController extends BaseController {
         }
     }
 
-    async getSurveyByID(req, res) {
+    async getTakeSurveyByID(req, res) {
         const { surveyID } = req.params;
         try {
             var data;
-            var questions = [];
-            const getSurveyQry = `SELECT surveyID, surveyName, adminID FROM survey WHERE surveyID = '${surveyID}' AND isDeleted = 0`;
+            const getSurveyQry = `SELECT surveyID, surveyName, adminID, userID FROM takesurvey WHERE surveyID = '${surveyID}' AND isDeleted = 0`;
             const getSurveyRes = await DBSequelize.query(getSurveyQry, {
                 type: Sequelize.QueryTypes.SELECT
             });
             if (getSurveyRes.length > 0) {
-                const getSurveyQuestionsQry = `SELECT id, surveyID, surveyQuestion, adminID FROM surveyquestion WHERE surveyID = '${surveyID}'`;
+                const getSurveyQuestionsQry = `SELECT surveyQuestion, surveyAnswer FROM takesurveydetail WHERE surveyID = '${surveyID}'`;
                 const getSurveyQuestionsRes = await DBSequelize.query(getSurveyQuestionsQry, {
                     type: Sequelize.QueryTypes.SELECT
                 });
-
-                for (var i = 0; i < getSurveyQuestionsRes.length; i++) {
-                    const getSurveyOptionsQry = `SELECT id, surveyID, questionID, choiceQuestion, adminID FROM surveydetail WHERE questionID = '${getSurveyQuestionsRes[i].id}'`;
-                    const getSurveyOptionsRes = await DBSequelize.query(getSurveyOptionsQry, {
-                        type: Sequelize.QueryTypes.SELECT
-                    });
-                    questions[i] = { question: getSurveyQuestionsRes[i].surveyQuestion, options: getSurveyOptionsRes };
-                }
 
                 data = {
                     surveyID: getSurveyRes[0].surveyID,
                     surveyName: getSurveyRes[0].surveyName,
                     adminID: getSurveyRes[0].adminID,
-                    questions: questions
+                    userID: getSurveyRes[0].userID,
+                    questions: getSurveyQuestionsRes
                 };
 
                 return Response(res)({
@@ -112,38 +100,27 @@ class SurveyController extends BaseController {
         }
     }
 
-    async getSurveys(req, res) {
+    async getTakeSurveys(req, res) {
         try {
             var data = [];
-            var questions = [];
-
-            const getSurveyQry = `SELECT surveyID, surveyName, adminID FROM survey WHERE isDeleted = 0`;
+            const getSurveyQry = `SELECT surveyID, surveyName, adminID, userID FROM takesurvey WHERE isDeleted = 0`;
             const getSurveyRes = await DBSequelize.query(getSurveyQry, {
                 type: Sequelize.QueryTypes.SELECT
             });
 
             for (var j = 0; j < getSurveyRes.length; j++) {
-                const getSurveyQuestionsQry = `SELECT id, surveyID, surveyQuestion, adminID FROM surveyquestion WHERE surveyID = '${getSurveyRes[j].surveyID}'`;
+                const getSurveyQuestionsQry = `SELECT surveyQuestion, surveyAnswer FROM takesurveydetail WHERE surveyID = '${getSurveyRes[j].surveyID}'`;
                 const getSurveyQuestionsRes = await DBSequelize.query(getSurveyQuestionsQry, {
                     type: Sequelize.QueryTypes.SELECT
                 });
-
-                for (var i = 0; i < getSurveyQuestionsRes.length; i++) {
-                    const getSurveyOptionsQry = `SELECT id, surveyID, questionID, choiceQuestion, adminID FROM surveydetail WHERE questionID = '${getSurveyQuestionsRes[i].id}'`;
-                    const getSurveyOptionsRes = await DBSequelize.query(getSurveyOptionsQry, {
-                        type: Sequelize.QueryTypes.SELECT
-                    });
-                    questions[i] = { question: getSurveyQuestionsRes[i].surveyQuestion, options: getSurveyOptionsRes };
-                }
 
                 data[j] = {
                     surveyID: getSurveyRes[j].surveyID,
                     surveyName: getSurveyRes[j].surveyName,
                     adminID: getSurveyRes[j].adminID,
-                    questions: questions
+                    userID: getSurveyRes[j].userID,
+                    questions: getSurveyQuestionsRes
                 };
-
-                questions = [];
             }
 
             return Response(res)({
@@ -160,42 +137,28 @@ class SurveyController extends BaseController {
         }
     }
 
-    async getSurveysByAdmin(req, res) {
+    async getTakeSurveysByAdmin(req, res) {
         const { adminID } = req.params;
         try {
             var data = [];
-            var questions = [];
-
-            const getSurveyQry = `SELECT surveyID, surveyName, adminID FROM survey WHERE adminID = '${adminID}' AND isDeleted = 0`;
+            const getSurveyQry = `SELECT surveyID, surveyName, adminID, userID FROM takesurvey WHERE adminID = '${adminID}' AND isDeleted = 0`;
             const getSurveyRes = await DBSequelize.query(getSurveyQry, {
                 type: Sequelize.QueryTypes.SELECT
             });
             if (getSurveyRes.length > 0) {
                 for (var j = 0; j < getSurveyRes.length; j++) {
-                    const getSurveyQuestionsQry = `SELECT id, surveyID, surveyQuestion, adminID FROM surveyquestion WHERE surveyID = '${getSurveyRes[j].surveyID}'`;
+                    const getSurveyQuestionsQry = `SELECT surveyQuestion, surveyAnswer FROM takesurveydetail WHERE surveyID = '${getSurveyRes[j].surveyID}'`;
                     const getSurveyQuestionsRes = await DBSequelize.query(getSurveyQuestionsQry, {
                         type: Sequelize.QueryTypes.SELECT
                     });
-
-                    for (var i = 0; i < getSurveyQuestionsRes.length; i++) {
-                        const getSurveyOptionsQry = `SELECT id, surveyID, questionID, choiceQuestion, adminID FROM surveydetail WHERE questionID = '${getSurveyQuestionsRes[i].id}'`;
-                        const getSurveyOptionsRes = await DBSequelize.query(getSurveyOptionsQry, {
-                            type: Sequelize.QueryTypes.SELECT
-                        });
-                        questions[i] = {
-                            question: getSurveyQuestionsRes[i].surveyQuestion,
-                            options: getSurveyOptionsRes
-                        };
-                    }
 
                     data[j] = {
                         surveyID: getSurveyRes[j].surveyID,
                         surveyName: getSurveyRes[j].surveyName,
                         adminID: getSurveyRes[j].adminID,
-                        questions: questions
+                        userID: getSurveyRes[j].userID,
+                        questions: getSurveyQuestionsRes
                     };
-
-                    questions = [];
                 }
 
                 return Response(res)({
@@ -219,10 +182,55 @@ class SurveyController extends BaseController {
         }
     }
 
-    async deleteSurvey(req, res) {
+    async getTakeSurveysByUser(req, res) {
+        const { userID } = req.params;
+        try {
+            var data = [];
+            const getSurveyQry = `SELECT surveyID, surveyName, adminID, userID FROM takesurvey WHERE userID = '${userID}' AND isDeleted = 0`;
+            const getSurveyRes = await DBSequelize.query(getSurveyQry, {
+                type: Sequelize.QueryTypes.SELECT
+            });
+            if (getSurveyRes.length > 0) {
+                for (var j = 0; j < getSurveyRes.length; j++) {
+                    const getSurveyQuestionsQry = `SELECT surveyQuestion, surveyAnswer FROM takesurveydetail WHERE surveyID = '${getSurveyRes[j].surveyID}'`;
+                    const getSurveyQuestionsRes = await DBSequelize.query(getSurveyQuestionsQry, {
+                        type: Sequelize.QueryTypes.SELECT
+                    });
+
+                    data[j] = {
+                        surveyID: getSurveyRes[j].surveyID,
+                        surveyName: getSurveyRes[j].surveyName,
+                        adminID: getSurveyRes[j].adminID,
+                        userID: getSurveyRes[j].userID,
+                        questions: getSurveyQuestionsRes
+                    };
+                }
+
+                return Response(res)({
+                    message: "Get Successfully",
+                    statusCode: 200,
+                    response: { data }
+                });
+            } else {
+                return Response(res)({
+                    message: "No Survey against this User",
+                    statusCode: 401,
+                    response: {}
+                });
+            }
+        } catch (error) {
+            return Response(res)({
+                message: "Failed",
+                statusCode: 400,
+                response: { error }
+            });
+        }
+    }
+
+    async deleteTakeSurvey(req, res) {
         const { surveyID } = req.params;
         try {
-            const deleteQry = `UPDATE survey SET isDeleted = 1 WHERE surveyID = '${surveyID}'`;
+            const deleteQry = `UPDATE takesurvey SET isDeleted = 1 WHERE surveyID = '${surveyID}'`;
             const deleteRes = await DBSequelize.query(deleteQry, {
                 type: Sequelize.QueryTypes.UPDATE
             });

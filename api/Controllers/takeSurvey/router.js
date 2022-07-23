@@ -1,14 +1,19 @@
 const router = require("express").Router();
+
 const controller = require("./controller");
 
-router.post("/createSurvey", controller.createSurvey);
+const { decodeJWTMiddleWare } = require("../../Helpers/Utils");
 
-router.get("/getSurveyByID/:surveyID", controller.getSurveyByID);
+router.post("/createTakeSurvey", decodeJWTMiddleWare, controller.createTakeSurvey);
 
-router.get("/getSurveys", controller.getSurveys);
+router.get("/getTakeSurveyByID/:surveyID", decodeJWTMiddleWare, controller.getTakeSurveyByID);
 
-router.get("/getSurveysByAdmin/:adminID", controller.getSurveysByAdmin);
+router.get("/getTakeSurveys", decodeJWTMiddleWare, controller.getTakeSurveys);
 
-router.put("/deleteSurvey/:surveyID", controller.deleteSurvey);
+router.get("/getTakeSurveysByAdmin/:adminID", decodeJWTMiddleWare, controller.getTakeSurveysByAdmin);
+
+router.get("/getTakeSurveysByUser/:userID", decodeJWTMiddleWare, controller.getTakeSurveysByUser);
+
+router.put("/deleteTakeSurvey/:surveyID", decodeJWTMiddleWare, controller.deleteTakeSurvey);
 
 module.exports = router;
