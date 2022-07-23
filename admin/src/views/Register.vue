@@ -12,29 +12,46 @@ import BaseDivider from "@/components/BaseDivider.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import { useRouter } from "vue-router";
+import { useMainStore } from "@/stores/main";
 // import FormValidationErrors from "@/components/FormValidationErrors.vue";
 
 const router = useRouter();
 
 const form = useForm({
-    name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
-    terms: []
+    userProfileName: "",
+    userEmail: "",
+    userPassword: "",
+    userPhone: "",
+    roleID: "3",
+    DOB: ""
 });
 
 useLayoutStore().fullScreenToggle(true);
 
 // const hasTermsAndPrivacyPolicyFeature = computed(() => usePage().props.value.jetstream.hasTermsAndPrivacyPolicyFeature);
+const mainStore = useMainStore();
+
+const resetForm = () => {
+    Object.keys(form).forEach(function (key) {
+        form[key] = "";
+    });
+};
 
 const submit = () => {
-    // form.transform((data) => ({
-    //     ...data,
-    //     terms: form.terms && form.terms.length
-    // })).post(route("register"), {
-    //     onFinish: () => form.reset("password", "password_confirmation")
-    // });
+    console.log(form);
+    const payload = {
+    userProfileName: form.userProfileName,
+    userEmail: form.userEmail,
+    userPassword: form.userPassword,
+    userPhone: form.userPhone,
+    roleID: "3",
+    DOB: form.DOB
+    }
+    mainStore.createUser(payload, (res) => {
+        console.log(res);
+        resetForm();
+        confirm();
+    });
 };
 </script>
 
@@ -46,61 +63,21 @@ const submit = () => {
             <!-- <FormValidationErrors /> -->
 
             <FormField label="Name" class="mb-1" label-for="name" help="Please enter your name">
-                <FormControl
-                    v-model="form.name"
-                    id="name"
-                    :icon="mdiAccount"
-                    autocomplete="name"
-                    type="text"
-                    required
-                />
+                <FormControl v-model="form.userProfileName" :icon="mdiAccount" type="text" required />
             </FormField>
 
             <FormField label="Email" class="mb-1" label-for="email" help="Please enter your email">
-                <FormControl
-                    v-model="form.email"
-                    id="email"
-                    :icon="mdiEmail"
-                    autocomplete="email"
-                    type="email"
-                    required
-                />
+                <FormControl v-model="form.userEmail" :icon="mdiEmail" type="email" required />
             </FormField>
             <FormField label="Date Of Birth" class="mb-1" label-for="email" help="Please enter your Date Of Birth">
-                <FormControl
-                    v-model="form.email"
-                    id="email"
-                    :icon="mdiCalendarAccount"
-                    autocomplete="email"
-                    type="date"
-                    required
-                />
+                <FormControl v-model="form.DOB" :icon="mdiCalendarAccount" type="date" required />
             </FormField>
-            <FormField
-                label="Phone Number"
-                class="mb-1"
-                label-for="phone-number"
-                help="Please enter your Date Of Birth"
-            >
-                <FormControl
-                    v-model="form.email"
-                    id="phone-number"
-                    :icon="mdiCalendarAccount"
-                    autocomplete="email"
-                    type="tel"
-                    required
-                />
+            <FormField label="Phone Number" class="mb-1" label-for="phone-number" help="Please enter your phone">
+                <FormControl v-model="form.userPhone" :icon="mdiCalendarAccount" type="tel" required />
             </FormField>
 
             <FormField label="Password" class="mb-1" label-for="password" help="Please enter new password">
-                <FormControl
-                    v-model="form.password"
-                    id="password"
-                    :icon="mdiFormTextboxPassword"
-                    type="password"
-                    autocomplete="new-password"
-                    required
-                />
+                <FormControl v-model="form.userPassword" :icon="mdiFormTextboxPassword" type="password" required />
             </FormField>
 
             <FormField
@@ -109,14 +86,7 @@ const submit = () => {
                 label-for="password_confirmation"
                 help="Please confirm your password"
             >
-                <FormControl
-                    v-model="form.password_confirmation"
-                    id="password_confirmation"
-                    :icon="mdiFormTextboxPassword"
-                    type="password"
-                    autocomplete="new-password"
-                    required
-                />
+                <FormControl v-model="form.userPassword" :icon="mdiFormTextboxPassword" type="password" required />
             </FormField>
 
             <!-- <FormCheckRadioPicker

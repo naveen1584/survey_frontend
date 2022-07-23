@@ -2,6 +2,9 @@ import { defineStore } from "pinia";
 import axios from "axios";
 
 let userData = JSON.parse(localStorage.getItem("userData"));
+
+let SERVER_URL = "http://localhost:9000";
+
 export const useMainStore = defineStore("main", {
     state: () => ({
         /* User */
@@ -31,7 +34,7 @@ export const useMainStore = defineStore("main", {
 
         Login(body, callBack, errorCallBack = () => {}) {
             axios
-                .post("http://localhost:9000/auth", body)
+                .post(`${SERVER_URL}/auth`, body)
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
@@ -46,7 +49,22 @@ export const useMainStore = defineStore("main", {
 
         createAdmin(body, callBack, errorCallBack = () => {}) {
             axios
-                .post("http://localhost:9000/createUser", body, { headers: { token: userData?.token } })
+                .post(`${SERVER_URL}/createUser`, body, { headers: { token: userData?.token } })
+                .then((response) => {
+                    let { data } = response;
+                    if (response.data.status.statusCode === 200) {
+                        callBack(data.response);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error.message);
+                    errorCallBack(error.message);
+                });
+        },
+
+        createUser(body, callBack, errorCallBack = () => {}) {
+            axios
+                .post(`${SERVER_URL}/createClientUser`, body)
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
@@ -61,7 +79,7 @@ export const useMainStore = defineStore("main", {
 
         deleteAdmin(body, callBack, errorCallBack = () => {}) {
             axios
-                .post("http://localhost:9000/createUser", body, { headers: { token: userData?.token } })
+                .post(`${SERVER_URL}/createUser`, body, { headers: { token: userData?.token } })
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
@@ -76,7 +94,7 @@ export const useMainStore = defineStore("main", {
 
         fetch(sampleDataKey, userID) {
             axios
-                .get(`http://localhost:9000/${sampleDataKey}/${userID}`, {
+                .get(`${SERVER_URL}/${sampleDataKey}/${userID}`, {
                     headers: {
                         token: userData?.token
                     }
