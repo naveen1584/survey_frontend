@@ -202,7 +202,7 @@ class authController extends BaseController {
     async deleteUser(req, res) {
         const { userId } = req.params;
         try {
-            const getQry = `UPDATE users SET isDeleted = 0 WHERE userId = '${userId}'`;
+            const getQry = `UPDATE users SET isDeleted = 1 WHERE userId = '${userId}'`;
             const result = await DBSequelize.query(getQry, { type: Sequelize.QueryTypes.UPDATE });
             return Response(res)({
                 message: "Deleted successfully!",
