@@ -6,6 +6,8 @@ const { decodeJWTMiddleWare } = require("../../Helpers/Utils");
 
 router.post("/createUser", decodeJWTMiddleWare, controller.createUser);
 
+router.post("/createClientUser", controller.createUser);
+
 router.post("/auth", controller.auth);
 
 router.get("/getRoles", decodeJWTMiddleWare, controller.getRoles);

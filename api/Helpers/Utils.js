@@ -20,7 +20,6 @@ const decodeJWT = (token) => {
 const decodeJWTMiddleWare = (req, res, next) => {
     try {
         if ("token" in req.headers) {
-            console.log("there are token headers");
             const token = req.headers["token"];
             const user = decodeJWT(token).data;
             if (!user) {

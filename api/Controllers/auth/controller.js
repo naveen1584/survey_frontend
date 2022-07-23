@@ -184,11 +184,11 @@ class authController extends BaseController {
         const { userId } = req.params;
         try {
             const getQry = `SELECT * FROM users WHERE userId = '${userId}' AND isDeleted = 0`;
-            const result = await DBSequelize.query(getQry, { type: Sequelize.QueryTypes.SELECT });
+            const [_obj] = await DBSequelize.query(getQry, { type: Sequelize.QueryTypes.SELECT });
             return Response(res)({
                 message: "Get successfully!",
                 statusCode: 200,
-                response: { result }
+                response: { result: _obj }
             });
         } catch (error) {
             return Response(res)({
@@ -202,7 +202,7 @@ class authController extends BaseController {
     async deleteUser(req, res) {
         const { userId } = req.params;
         try {
-            const getQry = `UPDATE users SET isDeleted = 0 WHERE userId = '${userId}'`;
+            const getQry = `UPDATE users SET isDeleted = 1 WHERE userId = '${userId}'`;
             const result = await DBSequelize.query(getQry, { type: Sequelize.QueryTypes.UPDATE });
             return Response(res)({
                 message: "Deleted successfully!",
