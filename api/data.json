@@ -3,30 +3,20 @@
     "adminID": "1",
     "questions": [
         {
-            "question": "string",
-            "options": [
-                {
-                    "name": "abc"
-                },
-                {
-                    "name": "abc"
-                },
-                {
-                    "name": "abc"
-                }
-            ]
+            "question": "WHAT IS YOUR NAME",
+            "options": []
         },
         {
-            "question": "string",
+            "question": "AGE",
             "options": [
                 {
-                    "name": "abc"
+                    "name": "9"
                 },
                 {
-                    "name": "abc"
+                    "name": "10"
                 },
                 {
-                    "name": "abc"
+                    "name": "11"
                 }
             ]
         }
