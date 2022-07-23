@@ -184,11 +184,11 @@ class authController extends BaseController {
         const { userId } = req.params;
         try {
             const getQry = `SELECT * FROM users WHERE userId = '${userId}' AND isDeleted = 0`;
-            const result = await DBSequelize.query(getQry, { type: Sequelize.QueryTypes.SELECT });
+            const [_obj] = await DBSequelize.query(getQry, { type: Sequelize.QueryTypes.SELECT });
             return Response(res)({
                 message: "Get successfully!",
                 statusCode: 200,
-                response: { result }
+                response: { result: _obj }
             });
         } catch (error) {
             return Response(res)({
