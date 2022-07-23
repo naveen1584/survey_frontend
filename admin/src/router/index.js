@@ -90,6 +90,15 @@ const routes = [
     },
     {
         meta: {
+            title: "Register",
+            fullScreen: true
+        },
+        path: "/register",
+        name: "register",
+        component: () => import("@/views/Register.vue")
+    },
+    {
+        meta: {
             title: "Error",
             fullScreen: true
         },

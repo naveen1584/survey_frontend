@@ -15,7 +15,7 @@ defineProps({
 
 const mainStore = useMainStore()
 
-const items = computed(() => mainStore.clients)
+const items = computed(() => mainStore.getUserByType)
 
 const isModalActive = ref(false)
 
@@ -45,7 +45,6 @@ const pagesList = computed(() => {
 })
 
 const remove = (arr, cb) => {
-  debugger
   console.log(arr)
   const newArr = []
 
@@ -62,8 +61,7 @@ const checked = (isChecked, client) => {
   if (isChecked) {
     checkedRows.value.push(client)
   } else {
-    debugger
-    checkedRows.value = remove(checkedRows.value, row => row.id === client.id)
+    checkedRows.value = remove(checkedRows.value, row => row.userId === client.userId)
   }
 }
 </script>
@@ -81,7 +79,7 @@ const checked = (isChecked, client) => {
   <div v-if="checkedRows.length" class="p-3 bg-gray-100/50 dark:bg-gray-800">
     <span v-for="checkedRow in checkedRows" :key="checkedRow.id"
       class="inline-block px-2 py-1 rounded-sm mr-2 text-sm bg-gray-100 dark:bg-gray-700">
-      {{ checkedRow.name }}
+      {{ checkedRow.userProfileName }}
     </span>
   </div>
 
@@ -89,38 +87,40 @@ const checked = (isChecked, client) => {
     <thead>
       <tr>
         <th v-if="checkable" />
-        <th />
+        <!-- <th /> -->
         <th>Name</th>
-        <th>Company</th>
-        <th>City</th>
-        <th>Progress</th>
-        <th>Created</th>
+        <th>Email</th>
+        <th>Date of Birth</th>
+        <th>Phone Number</th>
         <th />
       </tr>
     </thead>
     <tbody>
-      <tr v-for="client in itemsPaginated" :key="client.id">
+      <tr v-for="client in itemsPaginated" :key="client.userId">
         <TableCheckboxCell v-if="checkable" @checked="checked($event, client)" />
-        <td class="border-b-0 lg:w-6 before:hidden">
+        <!-- <td class="border-b-0 lg:w-6 before:hidden">
           <UserAvatar :username="client.name" class="w-24 h-24 mx-auto lg:w-6 lg:h-6" />
-        </td>
+        </td> -->
         <td data-label="Name">
-          {{ client.name }}
+          {{ client.userProfileName }}
         </td>
-        <td data-label="Company">
-          {{ client.company }}
+        <td data-label="Email">
+          {{ client.userEmail }}
         </td>
-        <td data-label="City">
-          {{ client.city }}
+        <td data-label="Email">
+          {{ client.DOB }}
         </td>
-        <td data-label="Progress" class="lg:w-32">
+        <td data-label="Phone Number">
+          {{ client.userPhone }}
+        </td>
+        <!-- <td data-label="Progress" class="lg:w-32">
           <progress class="flex w-2/5 self-center lg:w-full" max="100" :value="client.progress">
             {{ client.progress }}
           </progress>
-        </td>
-        <td data-label="Created" class="lg:w-1 whitespace-nowrap">
+        </td> -->
+        <!-- <td data-label="Created" class="lg:w-1 whitespace-nowrap">
           <small class="text-gray-500 dark:text-gray-400" :title="client.created">{{ client.created }}</small>
-        </td>
+        </td> -->
         <td class="before:hidden lg:w-1 whitespace-nowrap">
           <BaseButtons type="justify-start lg:justify-end" no-wrap>
             <BaseButton color="info" :icon="mdiEye" small @click="isModalActive = true" />

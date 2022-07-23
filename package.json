@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/htouqeer938/survey#readme",
   "dependencies": {
+    "@inertiajs/inertia-vue3": "^0.6.0",
     "concurrently": "^7.3.0"
   }
 }
