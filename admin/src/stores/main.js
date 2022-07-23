@@ -14,6 +14,7 @@ export const useMainStore = defineStore("main", {
 
         /* Sample data (commonly used) */
         getUserByType: [],
+        getUserByID: {},
         history: []
     }),
     actions: {
@@ -59,9 +60,9 @@ export const useMainStore = defineStore("main", {
                 });
         },
 
-        deleteAdmin(body, callBack, errorCallBack = () => {}) {
+        deleteAdmin(userId, callBack, errorCallBack = () => {}) {
             axios
-                .post("http://localhost:9000/createUser", body, { headers: { token: userData?.token } })
+                .put(`http://localhost:9000/deleteUser/${userId}`, "", { headers: { token: userData?.token } })
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {

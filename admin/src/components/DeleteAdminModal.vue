@@ -1,22 +1,15 @@
 <script setup>
-import { computed, onMounted, reactive } from "vue";
-import {
-    mdiClose,
-    mdiAccountOutline,
-    mdiEmailOutline,
-    mdiPhoneOutline,
-    mdiLockOutline,
-    mdiAccount,
-    mdiCalendarAccount
-} from "@mdi/js";
+import { computed } from "vue";
+import { mdiClose } from "@mdi/js";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import CardBox from "@/components/CardBox.vue";
 import BaseDivider from "@/components/BaseDivider.vue";
 import OverlayLayer from "@/components/OverlayLayer.vue";
-import FormField from "./FormField.vue";
-import FormControl from "./FormControl.vue";
-import { useMainStore } from "@/stores/main.js";
+import { useMainStore } from "@/stores/main";
+
+const mainStore = useMainStore();
+const userDataById = computed(() => mainStore.getUserByID);
 
 const props = defineProps({
     title: {
@@ -43,8 +36,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update:modelValue", "cancel", "confirm"]);
-const mainStore = useMainStore();
-const userDataById = computed(() => mainStore.getUserByID);
 
 const value = computed({
     get: () => props.modelValue,
@@ -56,7 +47,12 @@ const confirmCancel = (mode) => {
     emit(mode);
 };
 
-const confirm = () => confirmCancel("confirm");
+const confirm = () => {
+    mainStore.deleteAdmin(mainStore.getUserByID.userId, (res) => {
+        mainStore.fetch("getUserByType", 2);
+        confirmCancel("confirm");
+    });
+};
 
 const cancel = () => confirmCancel("cancel");
 </script>
@@ -76,35 +72,15 @@ const cancel = () => confirmCancel("cancel");
                 <h1 v-if="largeTitle" class="text-2xl">
                     {{ largeTitle }}
                 </h1>
-                <div class="p-2">
-                    <div class="flex">
-                        <div class="w-1/2 font-bold">Name</div>
-                        <div class="w-1/2">{{ userDataById.userProfileName }}</div>
-                    </div>
-                    <BaseDivider />
-                    <div class="flex">
-                        <div class="w-1/2 font-bold">Email</div>
-                        {{ userDataById.userEmail }}
-                    </div>
-                    <BaseDivider />
-                    <div class="flex">
-                        <div class="w-1/2 font-bold">Date Of Birth</div>
-                        {{ userDataById.DOB }}
-                    </div>
-                    <BaseDivider />
-                    <div class="flex">
-                        <div class="w-1/2 font-bold">Phone Number</div>
-                        {{ userDataById.userPhone }}
-                    </div>
-                    <BaseDivider />
-                </div>
+                <p>
+                    Are you to want to Delete <b>{{ userDataById.userProfileName }}</b>
+                </p>
             </div>
 
             <BaseDivider />
 
             <BaseButtons>
-                <!-- <BaseButton v-if="buttonLabel" type="submit" :label="buttonLabel" :color="button" /> -->
-                <!-- <BaseButton type="reset" color="info" outline label="Reset" /> -->
+                <BaseButton :label="buttonLabel" :color="button" @click="confirm" />
                 <BaseButton v-if="hasCancel" label="Cancel" :color="button" outline @click="cancel" />
             </BaseButtons>
         </CardBox>

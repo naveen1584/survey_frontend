@@ -70,7 +70,7 @@ const form = reactive({
 
 const resetForm = () => {
     Object.keys(form).forEach(function (key) {
-        form[key] = "";
+        key != "roleID" ? (form[key] = "") : "";
     });
 };
 
@@ -119,7 +119,7 @@ const submit = () => {
                         <FormControl v-model="form.userEmail" type="email" :icon="mdiEmailOutline" required />
                     </FormField>
                     <FormField label="Phone Number">
-                        <FormControl v-model="form.userPhone" type="number" :icon="mdiPhoneOutline" required />
+                        <FormControl v-model="form.userPhone" type="tel" :icon="mdiPhoneOutline" required />
                     </FormField>
                     <FormField label="Password">
                         <FormControl v-model="form.userPassword" type="password" :icon="mdiLockOutline" required />

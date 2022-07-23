@@ -12,6 +12,8 @@ import FormField from "@/components/FormField.vue";
 import FormControl from "@/components/FormControl.vue";
 import { useRouter } from "vue-router";
 import AddAdminModal from "@/components/AddAdminModal.vue";
+import ViewAdminModal from "../components/ViewAdminModal.vue";
+import DeleteAdminModal from "@/components/DeleteAdminModal.vue";
 
 const titleStack = ref(["Admin", "Dashboard"]);
 
@@ -34,6 +36,8 @@ const clientBarItems = computed(() => mainStore.clients.slice(0, 3));
 const transactionBarItems = computed(() => mainStore.history.slice(0, 3));
 
 const isAddAdminModalActive = ref(false);
+const isViewAdminModalActive = ref(false);
+const isDeleteAdminModalActive = ref(false);
 
 const submit = () => {
     console.log(form);
@@ -58,32 +62,16 @@ const surveyClick = () => {
             :surveyIcon="mdiPlus"
         />
         <AddAdminModal v-model="isAddAdminModalActive" title="Add Admin" buttonLabel="Submit" has-cancel />
-        <!-- <CardBoxModal v-model="isAddAdminModalActive" title="Add Admin">
-      <CardBox class="max-h-[22rem] overflow-auto  aside-scrollbars " form @submit.prevent="submit" has-table
-        componentClass="p-1">
-        <FormField label="First Name">
-          <FormControl v-model="form.name" type="email" :icon="mdiAccountOutline" required />
-        </FormField>
-        <FormField label="Last Name">
-          <FormControl v-model="form.name" type="email" :icon="mdiAccountOutline" required />
-        </FormField>
-        <FormField label="Profile Name">
-          <FormControl v-model="form.name" type="email" :icon="mdiAccount" required />
-        </FormField>
-        <FormField label="Email">
-          <FormControl v-model="form.email" type="email" :icon="mdiEmailOutline" required />
-        </FormField>
-        <FormField label="Phone Number">
-          <FormControl v-model="form.phone" type="number" :icon="mdiPhoneOutline" required />
-        </FormField>
-        <FormField label="Password">
-          <FormControl v-model="form.password" type="password" :icon="mdiLockOutline" required />
-        </FormField>
-      </CardBox>
-    </CardBoxModal> -->
+        <ViewAdminModal v-model="isViewAdminModalActive" title="View Admin" has-cancel />
+        <!-- <ViewAdminModal v-model="isDeleteAdminModalActive" title="Delete Admin" /> -->
+        <DeleteAdminModal v-model="isDeleteAdminModalActive" large-title="Please confirm" button="danger" has-cancel />
 
         <CardBox has-table>
-            <TableSampleClients checkable />
+            <TableSampleClients
+                @view-click="isViewAdminModalActive = true"
+                @delete-click="isDeleteAdminModalActive = true"
+                checkable
+            />
         </CardBox>
     </SectionMain>
 </template>
