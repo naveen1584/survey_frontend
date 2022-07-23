@@ -1,0 +1,28 @@
+{
+    "surveyID": "Survey ID",
+    "surveyName": "abc",
+    "adminID": "1",
+    "userID": "3",
+    "questions": [
+        {
+            "question": "string",
+            "answer": "string"
+        },
+        {
+            "question": "string",
+            "answer": "string"
+        },
+        {
+            "question": "string",
+            "answer": "string"
+        },
+        {
+            "question": "string",
+            "answer": "string"
+        },
+        {
+            "question": "string",
+            "answer": "string"
+        }
+    ]
+}
