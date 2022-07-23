@@ -66,6 +66,7 @@ const router = useRouter()
 
 
 const logout = () => {
+  localStorage.removeItem("userData")
   router.push('/')
 }
 </script>

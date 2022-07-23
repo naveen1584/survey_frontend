@@ -22,8 +22,7 @@ const styleStore = useStyleStore(pinia);
 const layoutStore = useLayoutStore(pinia);
 
 /* Fetch sample data */
-mainStore.fetch("clients");
-mainStore.fetch("history");
+// mainStore.fetch("history");
 
 /* App style */
 styleStore.setStyle(localStorage[styleKey] ?? "basic");

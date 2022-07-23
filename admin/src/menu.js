@@ -22,7 +22,8 @@ export default [
         {
             to: "/dashboard",
             icon: mdiAccountCog,
-            label: `${"Admin"}`
+            label: `${"Admin"}`,
+            role: "admin"
         }
     ]
     // "Examples",
