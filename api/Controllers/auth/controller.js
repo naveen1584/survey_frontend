@@ -129,7 +129,7 @@ class authController extends BaseController {
                             type: Sequelize.QueryTypes.UPDATE
                         });
                         const detail = {
-                            userID: result[0].userID,
+                            userID: result[0].userId,
                             userProfileName: result[0].userProfileName,
                             userDOB: result[0].DOB,
                             userEmail: result[0].userEmail,
