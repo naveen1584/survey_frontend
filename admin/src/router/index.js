@@ -3,6 +3,8 @@ import Style from "@/views/StyleView.vue";
 import Home from "@/views/HomeView.vue";
 import AdminVueVue from "@/views/AdminVue.vue";
 import UserView from "@/views/UserView.vue";
+import TakeSurveyVue from "@/views/TakeSurvey.vue";
+
 const routes = [
     {
         meta: {
@@ -30,6 +32,14 @@ const routes = [
         path: "/admin",
         name: "admin",
         component: AdminVueVue
+    },
+    {
+        meta: {
+            title: "Take Survey"
+        },
+        path: "/takeSurvey",
+        name: "takeSurvey",
+        component: TakeSurveyVue
     },
     {
         meta: {
