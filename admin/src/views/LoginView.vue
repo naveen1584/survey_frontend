@@ -11,6 +11,7 @@ import FormControl from "@/components/FormControl.vue";
 import BaseDivider from "@/components/BaseDivider.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
+import { createToast } from "mosha-vue-toastify";
 
 const form = reactive({
     login: "superadmin@mail.com",

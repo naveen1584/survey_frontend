@@ -13,17 +13,19 @@ import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import { useRouter } from "vue-router";
 import { useMainStore } from "@/stores/main";
+import { reactive } from "@vue/reactivity";
 // import FormValidationErrors from "@/components/FormValidationErrors.vue";
 
 const router = useRouter();
 
-const form = useForm({
+const form = reactive({
     userProfileName: "",
     userEmail: "",
     userPassword: "",
     userPhone: "",
     roleID: "3",
-    DOB: ""
+    DOB: "",
+    processing: false
 });
 
 useLayoutStore().fullScreenToggle(true);
@@ -33,25 +35,24 @@ const mainStore = useMainStore();
 
 const resetForm = () => {
     Object.keys(form).forEach(function (key) {
-        form[key] = "";
+        key != "roleID" ? (form[key] = "") : "";
     });
 };
 
 const submit = () => {
     console.log(form);
-    const payload = {
-    userProfileName: form.userProfileName,
-    userEmail: form.userEmail,
-    userPassword: form.userPassword,
-    userPhone: form.userPhone,
-    roleID: "3",
-    DOB: form.DOB
-    }
-    mainStore.createUser(payload, (res) => {
-        console.log(res);
-        resetForm();
-        confirm();
-    });
+    form.processing = true;
+    mainStore.createUser(
+        form,
+        (res) => {
+            form.processing = false;
+            console.log(res);
+            resetForm();
+        },
+        (err) => {
+            form.processing = false;
+        }
+    );
 };
 </script>
 

@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import { createToast } from "mosha-vue-toastify";
 
 let userData = JSON.parse(localStorage.getItem("userData"));
 
@@ -39,10 +40,12 @@ export const useMainStore = defineStore("main", {
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
+                        createToast("login Successfully", { type: "success" });
                         callBack(data.response);
                     }
                 })
                 .catch((error) => {
+                    createToast("In valid userName/Password", { type: "danger" });
                     console.log(error.message);
                     errorCallBack(error.message);
                 });
@@ -54,10 +57,12 @@ export const useMainStore = defineStore("main", {
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
+                        createToast("Admin Created Successfully", { type: "success" });
                         callBack(data.response);
                     }
                 })
                 .catch((error) => {
+                    createToast("Something went wrong try again", { type: "danger" });
                     console.log(error.message);
                     errorCallBack(error.message);
                 });
@@ -69,10 +74,12 @@ export const useMainStore = defineStore("main", {
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
+                        createToast("User Register Successfully", { type: "success" });
                         callBack(data.response);
                     }
                 })
                 .catch((error) => {
+                    createToast("Something went wrong try again", { type: "danger" });
                     console.log(error.message);
                     errorCallBack(error.message);
                 });
@@ -84,10 +91,12 @@ export const useMainStore = defineStore("main", {
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
+                        createToast("Admin Deleted Successfully", { type: "success" });
                         callBack(data.response);
                     }
                 })
                 .catch((error) => {
+                    createToast("Something went wrong try again", { type: "danger" });
                     console.log(error.message);
                     errorCallBack(error.message);
                 });
@@ -111,7 +120,7 @@ export const useMainStore = defineStore("main", {
                     }
                 })
                 .catch((error) => {
-                    alert(error.message);
+                    createToast("Something went wrong try again, Please Refresh Page", { type: "danger" });
                 });
         }
     }

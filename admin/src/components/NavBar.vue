@@ -153,7 +153,7 @@ const logout = () => {
           </template>
         </NavBarMenu> -->
                 <NavBarMenu has-divider>
-                    <NavBarItemLabel :label="userData.detail.userProfileName">
+                    <NavBarItemLabel :label="userData?.detail?.userProfileName">
                         <UserAvatar class="w-6 h-6 mr-3 inline-flex" />
                     </NavBarItemLabel>
 
