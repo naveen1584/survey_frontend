@@ -142,7 +142,7 @@ class SurveyController extends BaseController {
 
                         choiceQuestions[p] = {
                             question: getSurveyQuestionsRes[i].surveyQuestion,
-                            options: { ...choices }
+                            options: choices
                         };
                         p++;
                     } else {
