@@ -23,6 +23,16 @@ const onCancelClick = () => {
     router.push('/dashboard');
 };
 
+const restOptions = (arr) => {
+    console.log(arr);
+    const obj = {};
+    arr.map((key) => {
+        obj[key] = key;
+    });
+    console.log(obj);
+    return obj;
+};
+
 const data = {
     surveyID: 'SR004',
     surveyName: 'Second Survey',
@@ -30,43 +40,23 @@ const data = {
     choiceQuestions: [
         {
             question: 'What is your Country 1',
-            options: {
-                0: 'US',
-                1: 'UK',
-                2: 'Island'
-            }
+            options: ['US', 'UK', 'Island', 'india']
         },
         {
             question: 'What is your Country 2',
-            options: {
-                0: 'US',
-                1: 'UK',
-                2: 'Island'
-            }
+            options: ['US', 'UK', 'Island']
         },
         {
             question: 'What is your Country 3',
-            options: {
-                0: 'US',
-                1: 'UK',
-                2: 'Island'
-            }
+            options: ['US', 'UK', 'Island']
         },
         {
             question: 'What is your Country 4',
-            options: {
-                0: 'US',
-                1: 'UK',
-                2: 'Island'
-            }
+            options: ['US', 'UK', 'Island']
         },
         {
             question: 'What is your Country 5',
-            options: {
-                0: 'US',
-                1: 'UK',
-                2: 'Island'
-            }
+            options: ['US', 'UK', 'Island']
         }
     ],
     textQuestions: [
@@ -96,29 +86,27 @@ const data = {
 
 <template>
     <CardBox form @submit.prevent="submit" has-table componentClass="p-1">
-        <FormField
-            v-for="item in data.textQuestions"
-            :key="item.id"
-            :label="`${item.question}`"
-            help="Your question. Max 255 characters"
-        >
-            <FormControl type="textarea" placeholder="Enter your Answer here" />
-        </FormField>
+        <div class="mb-10" v-for="(item, index) in data.choiceQuestions">
+            <FormField :key="item.id" :label="`Question No.${index + 1}: ${item.question}`">
+                <div></div>
+            </FormField>
 
-        <FormField
-            v-for="item in data.choiceQuestions"
-            :key="item.id"
-            :label="`${item.question}`"
-            wrap-body
-            help="Please choose one answer"
-        >
-            <FormCheckRadioPicker name="option-radio" type="radio" :options="`${item.options}`" />
-            <label>{{ item.options }}</label>
-        </FormField>
+            <FormField label="Please choose one answer:">
+                <FormCheckRadioPicker type="radio" :options="restOptions(item.options)" />
+            </FormField>
+        </div>
+        <div v-for="item in data.textQuestions">
+            <FormField :key="item.id" :label="`${item.question}`"><div></div> </FormField>
 
-        <BaseButtons type="justify-end">
-            <BaseButton type="submit" color="info" label="Submit" />
-            <BaseButton type="button" @click="onCancelClick" color="danger" label="Cancel" outline />
-        </BaseButtons>
+            <FormField label="Answers">
+                <FormControl type="textarea" placeholder="Enter your Answer here" />
+            </FormField>
+        </div>
+        <div class="sticky bottom-[25px] p-2 dark:bg-gray-900/70 bg-white border border-gray-100 dark:border-gray-800">
+            <BaseButtons type="justify-end">
+                <BaseButton type="submit" color="info" label="Submit" />
+                <BaseButton type="button" @click="onCancelClick" color="danger" label="Cancel" outline />
+            </BaseButtons>
+        </div>
     </CardBox>
 </template>
