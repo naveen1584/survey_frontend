@@ -10,6 +10,8 @@ router.get("/getSurveyByID/:surveyID", decodeJWTMiddleWare, controller.getSurvey
 
 router.get("/getSurveys", decodeJWTMiddleWare, controller.getSurveys);
 
+router.get("/getSurveyByIDForTake/:surveyID", decodeJWTMiddleWare, controller.getSurveyByIDForTake);
+
 router.get("/getSurveysByAdmin/:adminID", decodeJWTMiddleWare, controller.getSurveysByAdmin);
 
 router.put("/deleteSurvey/:surveyID", decodeJWTMiddleWare, controller.deleteSurvey);

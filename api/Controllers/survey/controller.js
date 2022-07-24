@@ -112,6 +112,77 @@ class SurveyController extends BaseController {
         }
     }
 
+    async getSurveyByIDForTake(req, res) {
+        const { surveyID } = req.params;
+        try {
+            var data;
+            var textQuestions = [];
+            var choiceQuestions = [];
+            var p = 0;
+            var o = 0;
+            const getSurveyQry = `SELECT surveyID, surveyName, adminID FROM survey WHERE surveyID = '${surveyID}' AND isDeleted = 0`;
+            const getSurveyRes = await DBSequelize.query(getSurveyQry, {
+                type: Sequelize.QueryTypes.SELECT
+            });
+            if (getSurveyRes.length > 0) {
+                const getSurveyQuestionsQry = `SELECT id, surveyID, surveyQuestion, adminID FROM surveyquestion WHERE surveyID = '${surveyID}'`;
+                const getSurveyQuestionsRes = await DBSequelize.query(getSurveyQuestionsQry, {
+                    type: Sequelize.QueryTypes.SELECT
+                });
+
+                for (var i = 0; i < getSurveyQuestionsRes.length; i++) {
+                    const getSurveyOptionsQry = `SELECT choiceQuestion FROM surveydetail WHERE questionID = '${getSurveyQuestionsRes[i].id}'`;
+                    const getSurveyOptionsRes = await DBSequelize.query(getSurveyOptionsQry, {
+                        type: Sequelize.QueryTypes.SELECT
+                    });
+                    if (getSurveyOptionsRes.length > 0) {
+                        var choices = getSurveyOptionsRes.map(function (item) {
+                            return item["choiceQuestion"];
+                        });
+
+                        choiceQuestions[p] = {
+                            question: getSurveyQuestionsRes[i].surveyQuestion,
+                            options: { ...choices }
+                        };
+                        p++;
+                    } else {
+                        textQuestions[o] = {
+                            question: getSurveyQuestionsRes[i].surveyQuestion,
+                            options: getSurveyOptionsRes
+                        };
+                        o++;
+                    }
+                }
+
+                data = {
+                    surveyID: getSurveyRes[0].surveyID,
+                    surveyName: getSurveyRes[0].surveyName,
+                    adminID: getSurveyRes[0].adminID,
+                    choiceQuestions: choiceQuestions,
+                    textQuestions: textQuestions
+                };
+
+                return Response(res)({
+                    message: "Get Successfully",
+                    statusCode: 200,
+                    response: { data }
+                });
+            } else {
+                return Response(res)({
+                    message: "No Survey against this ID",
+                    statusCode: 401,
+                    response: {}
+                });
+            }
+        } catch (error) {
+            return Response(res)({
+                message: "Failed",
+                statusCode: 400,
+                response: { error }
+            });
+        }
+    }
+
     async getSurveys(req, res) {
         try {
             var data = [];

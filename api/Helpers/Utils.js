@@ -23,23 +23,26 @@ const decodeJWTMiddleWare = (req, res, next) => {
             const token = req.headers["token"];
             const user = decodeJWT(token).data;
             if (!user) {
-                return res.status(200).json({
+                return Response(res)({
+                    message: "Token is expired",
                     statusCode: 400,
-                    message: "Token is expired"
+                    response: {}
                 });
             } else {
                 req.body.userData = user;
                 next();
             }
         } else
-            res.status(200).json({
+            return Response(res)({
+                message: "Token header not found",
                 statusCode: 400,
-                message: "Token header not found"
+                response: {}
             });
     } catch (err) {
-        res.status(400).json({
+        return Response(res)({
+            message: "Token Expired",
             statusCode: 400,
-            message: "Token expired"
+            response: {}
         });
     }
 };
