@@ -24,7 +24,14 @@ const mainStore = useMainStore();
 const submit = () => {
     mainStore.Login({ userEmail: form.login, userPassword: form.pass }, (res) => {
         localStorage.setItem("userData", JSON.stringify(res));
-        router.push("/dashboard");
+        let loggedInUserID = res?.userRole;
+        if (loggedInUserID === 1) {
+            router.push("/dashboard");
+        } else if (loggedInUserID === 2) {
+            router.push("/dashboard");
+        } else if (loggedInUserID === 3) {
+            router.push("/dashboard");
+        }
     });
 };
 
