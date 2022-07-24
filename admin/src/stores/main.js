@@ -40,7 +40,9 @@ export const useMainStore = defineStore("main", {
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
-                        createToast("login Successfully", { type: "success" });
+                        createToast(`welcome! ${data.response.detail.userProfileName} login Successfully`, {
+                            type: "success"
+                        });
                         callBack(data.response);
                     }
                 })
