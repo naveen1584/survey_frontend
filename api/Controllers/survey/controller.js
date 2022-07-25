@@ -64,7 +64,7 @@ class SurveyController extends BaseController {
     async getSurveyByID(req, res) {
         const { surveyID } = req.params;
         try {
-            var data;
+            var result;
             var questions = [];
             const getSurveyQry = `SELECT surveyID, surveyName, adminID FROM survey WHERE surveyID = '${surveyID}' AND isDeleted = 0`;
             const getSurveyRes = await DBSequelize.query(getSurveyQry, {
@@ -84,7 +84,7 @@ class SurveyController extends BaseController {
                     questions[i] = { question: getSurveyQuestionsRes[i].surveyQuestion, options: getSurveyOptionsRes };
                 }
 
-                data = {
+                result = {
                     surveyID: getSurveyRes[0].surveyID,
                     surveyName: getSurveyRes[0].surveyName,
                     adminID: getSurveyRes[0].adminID,
@@ -94,7 +94,7 @@ class SurveyController extends BaseController {
                 return Response(res)({
                     message: "Get Successfully",
                     statusCode: 200,
-                    response: { data }
+                    response: { result }
                 });
             } else {
                 return Response(res)({
@@ -234,7 +234,7 @@ class SurveyController extends BaseController {
     async getSurveysByAdmin(req, res) {
         const { adminID } = req.params;
         try {
-            var data = [];
+            var result = [];
             var questions = [];
 
             const getSurveyQry = `SELECT surveyID, surveyName, adminID FROM survey WHERE adminID = '${adminID}' AND isDeleted = 0`;
@@ -259,7 +259,7 @@ class SurveyController extends BaseController {
                         };
                     }
 
-                    data[j] = {
+                    result[j] = {
                         surveyID: getSurveyRes[j].surveyID,
                         surveyName: getSurveyRes[j].surveyName,
                         adminID: getSurveyRes[j].adminID,
@@ -272,7 +272,7 @@ class SurveyController extends BaseController {
                 return Response(res)({
                     message: "Get Successfully",
                     statusCode: 200,
-                    response: { data }
+                    response: { result }
                 });
             } else {
                 return Response(res)({

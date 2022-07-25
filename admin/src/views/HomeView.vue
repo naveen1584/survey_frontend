@@ -44,7 +44,7 @@ const submit = () => {
 };
 
 const surveyClick = () => {
-    router.push("/user");
+    router.push("/createSurvey");
 };
 </script>
 

@@ -66,7 +66,7 @@ const menuOpenLg = () => {
 const router = useRouter();
 
 const logout = () => {
-    localStorage.removeItem("userData");
+    localStorage.clear();
     router.push("/");
 };
 </script>

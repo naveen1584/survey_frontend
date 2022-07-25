@@ -22,32 +22,56 @@ let superAdminACL = [
     {
         to: "/dashboard",
         icon: mdiAccountCog,
-        label: `${"Super Admin"}`,
-        role: "admin"
+        label: `${"Dashboard"}`,
+        role: "superAdmin"
     },
     {
         to: "/dashboard2",
         icon: mdiAccountCog,
         label: `${"Super Admin 3"}`,
-        role: "admin"
+        role: "superAdmin"
     }
 ];
 let adminACL = [
     "General",
     {
-        to: "/dashboard",
+        to: "/admin/surveys",
         icon: mdiAccountCog,
-        label: `${"Admin"}`,
+        label: `${"Surveys"}`,
+        role: "admin"
+    },
+    {
+        to: "/admin/takeSurveys",
+        icon: mdiAccountCog,
+        label: `${"Complete Surveys"}`,
         role: "admin"
     }
 ];
 let userACL = [
     "General",
     {
-        to: "/dashboard",
+        to: "/user/dashboard",
         icon: mdiAccountCog,
-        label: `${"User"}`,
-        role: "admin"
+        label: `${"Dashboard"}`,
+        role: "user"
+    },
+    {
+        to: "/user/about",
+        icon: mdiAccountCog,
+        label: `${"About"}`,
+        role: "user"
+    },
+    {
+        to: "/user/contactUs",
+        icon: mdiAccountCog,
+        label: `${"Contact us"}`,
+        role: "user"
+    },
+    {
+        to: "/user/userAgreement",
+        icon: mdiAccountCog,
+        label: `${"User Agreement"}`,
+        role: "user"
     }
 ];
 if (loggedInUserID === 1) {

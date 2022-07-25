@@ -28,9 +28,9 @@ const submit = () => {
         if (loggedInUserID === 1) {
             router.push("/dashboard");
         } else if (loggedInUserID === 2) {
-            router.push("/dashboard");
+            router.push("/admin/surveys");
         } else if (loggedInUserID === 3) {
-            router.push("/dashboard");
+            router.push("/user/dashboard");
         }
     });
 };
