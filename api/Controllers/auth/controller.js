@@ -172,12 +172,12 @@ class authController extends BaseController {
             if (getRes.length > 0) {
                 var code = Math.random().toString(10).substr(2, 6);
 
-                const result = BaseController.sendHTMLMail({
-                    to: userEmail,
-                    subject: "Password reset Survey",
-                    text: code,
-                    html: `<h1 style='text-align:center'>Password reset code '${code}'</h1>`
-                });
+                // const result = BaseController.sendHTMLMail({
+                //     to: userEmail,
+                //     subject: "Password reset Survey",
+                //     text: code,
+                //     html: `<h1 style='text-align:center'>Password reset code '${code}'</h1>`
+                // });
 
                 const insertRecoveryQry = `UPDATE users SET recoveryKey = '${code}' WHERE userEmail = '${userEmail}'`;
                 const insertRecoveryRes = await DBSequelize.query(insertRecoveryQry, {
@@ -193,6 +193,41 @@ class authController extends BaseController {
                 return Response(res)({
                     message: "Invalid Email. Please try again!",
                     statusCode: 401,
+                    response: {}
+                });
+            }
+        } catch (error) {
+            return Response(res)({
+                message: "Failed",
+                statusCode: 400,
+                response: { error }
+            });
+        }
+    }
+
+    async resetPassword(req, res) {
+        const { code, userEmail, userPassword } = req.body;
+        try {
+            const salt = await bcrypt.genSalt();
+            const hashPassword = await bcrypt.hash(userPassword, salt);
+            const checkQry = `SELECT * FROM users WHERE userEmail = '${userEmail}' AND recoveryKey = '${code}'`;
+            const checkRes = await DBSequelize.query(checkQry, {
+                type: Sequelize.QueryTypes.SELECT
+            });
+            if (checkRes.length > 0) {
+                const updateQry = `UPDATE users SET userPassword = '${hashPassword}', recoveryKey = '' WHERE userEmail = '${userEmail}' AND recoveryKey = '${code}'`;
+                const result = await DBSequelize.query(updateQry, {
+                    type: Sequelize.QueryTypes.UPDATE
+                });
+                return Response(res)({
+                    message: "Password Updated successfully!",
+                    statusCode: 200,
+                    response: { result }
+                });
+            } else {
+                return Response(res)({
+                    message: "Invalid Recovery Key or Email!",
+                    statusCode: 400,
                     response: {}
                 });
             }

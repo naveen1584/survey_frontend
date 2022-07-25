@@ -26,9 +26,9 @@ let superAdminACL = [
         role: "superAdmin"
     },
     {
-        to: "/dashboard2",
+        to: "/allSurveys",
         icon: mdiAccountCog,
-        label: `${"Super Admin 3"}`,
+        label: `${"Surveys"}`,
         role: "superAdmin"
     }
 ];
@@ -37,7 +37,7 @@ let adminACL = [
     {
         to: "/admin/surveys",
         icon: mdiAccountCog,
-        label: `${"Surveys"}`,
+        label: `${"Survey's"}`,
         role: "admin"
     },
     {

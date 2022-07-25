@@ -185,7 +185,7 @@ class SurveyController extends BaseController {
 
     async getSurveys(req, res) {
         try {
-            var data = [];
+            var result = [];
             var questions = [];
 
             const getSurveyQry = `SELECT surveyID, surveyName, adminID FROM survey WHERE isDeleted = 0`;
@@ -207,7 +207,7 @@ class SurveyController extends BaseController {
                     questions[i] = { question: getSurveyQuestionsRes[i].surveyQuestion, options: getSurveyOptionsRes };
                 }
 
-                data[j] = {
+                result[j] = {
                     surveyID: getSurveyRes[j].surveyID,
                     surveyName: getSurveyRes[j].surveyName,
                     adminID: getSurveyRes[j].adminID,
@@ -220,7 +220,7 @@ class SurveyController extends BaseController {
             return Response(res)({
                 message: "Get Successfully",
                 statusCode: 200,
-                response: { data }
+                response: { result }
             });
         } catch (error) {
             return Response(res)({

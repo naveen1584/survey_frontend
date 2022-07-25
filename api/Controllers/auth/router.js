@@ -12,6 +12,8 @@ router.post("/auth", controller.auth);
 
 router.post("/forgotPassword", controller.forgotPassword);
 
+router.post("/resetPassword", controller.resetPassword);
+
 router.get("/getRoles", decodeJWTMiddleWare, controller.getRoles);
 
 router.get("/getUserByType/:roleID", decodeJWTMiddleWare, controller.getUserByTypes);

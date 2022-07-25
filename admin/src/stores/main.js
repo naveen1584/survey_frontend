@@ -22,6 +22,8 @@ export const useMainStore = defineStore("main", {
         getTakeSurveysByUser: [],
         userDetail: {},
         getUserByID: {},
+        getSurveys: [],
+        getTakeSurveys: [],
         getSurveyByID: {},
         getSurveyByIDForTake: {},
         getTakeSurveyByID: {},

@@ -74,6 +74,7 @@ const onClickSignUp = () => {
             <BaseButtons>
                 <BaseButton type="submit" color="info" label="Login" />
                 <BaseButton to="/register" color="info" outline label="Sign Up" />
+                <a href="/#/forgotPassword">Forgot Password?</a>
             </BaseButtons>
         </CardBox>
     </SectionFullScreen>

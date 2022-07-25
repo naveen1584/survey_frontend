@@ -6,6 +6,10 @@ import CreateSurvey from "@/views/CreateSurvey.vue";
 import TakeSurveyVue from "@/views/TakeSurvey.vue";
 import UserView from "@/views/UserView.vue";
 import TakeSurveyForm from "@/views/TakeSurveyForm.vue";
+import ViewSurveysSuperAdmin from "@/views/ViewSurveysSuperAdmin.vue";
+import CompleteSurveys from "@/views/takedSurveyByAdmin/CompleteSurveys.vue";
+import ForgotPassword from "@/views/ForgotPassword.vue";
+import ResetPassword from "@/views/ResetPassword.vue";
 
 const routes = [
     {
@@ -27,6 +31,14 @@ const routes = [
     },
     {
         meta: {
+            title: "All Surveys"
+        },
+        path: "/allSurveys",
+        name: "allSurveys",
+        component: ViewSurveysSuperAdmin
+    },
+    {
+        meta: {
             title: "User Dashboard"
         },
         path: "/user/dashboard",
@@ -40,6 +52,14 @@ const routes = [
         path: "/admin/surveys",
         name: "admin",
         component: AdminVue
+    },
+    {
+        meta: {
+            title: "Completed"
+        },
+        path: "/admin/takeSurveys",
+        name: "adminTakeSurveys",
+        component: CompleteSurveys
     },
     {
         meta: {
@@ -122,6 +142,24 @@ const routes = [
         path: "/register",
         name: "register",
         component: () => import("@/views/Register.vue")
+    },
+    {
+        meta: {
+            title: "Forgot Password",
+            fullScreen: true
+        },
+        path: "/forgotPassword",
+        name: "forgotPassword",
+        component: ForgotPassword
+    },
+    {
+        meta: {
+            title: "Reset Password",
+            fullScreen: true
+        },
+        path: "/resetPassword",
+        name: "resetPassword",
+        component: ResetPassword
     },
     {
         meta: {
