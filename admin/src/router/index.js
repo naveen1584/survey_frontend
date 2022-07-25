@@ -1,9 +1,10 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Style from "@/views/StyleView.vue";
 import Home from "@/views/HomeView.vue";
-import AdminVueVue from "@/views/AdminVue.vue";
-import UserView from "@/views/UserView.vue";
+import AdminVue from "@/views/AdminVue.vue";
+import CreateSurvey from "@/views/CreateSurvey.vue";
 import TakeSurveyVue from "@/views/TakeSurvey.vue";
+import UserView from "@/views/UserView.vue";
 
 const routes = [
     {
@@ -16,8 +17,6 @@ const routes = [
         component: Style
     },
     {
-        // Document title tag
-        // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
         meta: {
             title: "Dashboard"
         },
@@ -27,11 +26,19 @@ const routes = [
     },
     {
         meta: {
+            title: "User Dashboard"
+        },
+        path: "/user/dashboard",
+        name: "user",
+        component: UserView
+    },
+    {
+        meta: {
             title: "Admin"
         },
-        path: "/admin",
+        path: "/admin/surveys",
         name: "admin",
-        component: AdminVueVue
+        component: AdminVue
     },
     {
         meta: {
@@ -43,28 +50,28 @@ const routes = [
     },
     {
         meta: {
-            title: "User"
+            title: "Create Survey"
         },
-        path: "/user",
-        name: "user",
-        component: UserView
+        path: "/createSurvey",
+        name: "createSurvey",
+        component: CreateSurvey
     },
-    {
-        meta: {
-            title: "Tables"
-        },
-        path: "/tables",
-        name: "tables",
-        component: () => import("@/views/TablesView.vue")
-    },
-    {
-        meta: {
-            title: "Forms"
-        },
-        path: "/forms",
-        name: "forms",
-        component: () => import("@/views/FormsView.vue")
-    },
+    // {
+    //     meta: {
+    //         title: "Tables"
+    //     },
+    //     path: "/tables",
+    //     name: "tables",
+    //     component: () => import("@/views/TablesView.vue")
+    // },
+    // {
+    //     meta: {
+    //         title: "Forms"
+    //     },
+    //     path: "/forms",
+    //     name: "forms",
+    //     component: () => import("@/views/FormsView.vue")
+    // },
     {
         meta: {
             title: "Profile"
@@ -73,22 +80,22 @@ const routes = [
         name: "profile",
         component: () => import("@/views/ProfileView.vue")
     },
-    {
-        meta: {
-            title: "Ui"
-        },
-        path: "/ui",
-        name: "ui",
-        component: () => import("@/views/UiView.vue")
-    },
-    {
-        meta: {
-            title: "Responsive layout"
-        },
-        path: "/responsive",
-        name: "responsive",
-        component: () => import("@/views/ResponsiveView.vue")
-    },
+    // {
+    //     meta: {
+    //         title: "Ui"
+    //     },
+    //     path: "/ui",
+    //     name: "ui",
+    //     component: () => import("@/views/UiView.vue")
+    // },
+    // {
+    //     meta: {
+    //         title: "Responsive layout"
+    //     },
+    //     path: "/responsive",
+    //     name: "responsive",
+    //     component: () => import("@/views/ResponsiveView.vue")
+    // },
     {
         meta: {
             title: "Login",

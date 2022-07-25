@@ -1,12 +1,12 @@
-import { defineStore } from 'pinia';
-import axios from 'axios';
-import { createToast } from 'mosha-vue-toastify';
+import { defineStore } from "pinia";
+import axios from "axios";
+import { createToast } from "mosha-vue-toastify";
 
-let userData = JSON.parse(localStorage.getItem('userData'));
+let userData = JSON.parse(localStorage.getItem("userData"));
 
-let SERVER_URL = 'http://localhost:9000';
+let SERVER_URL = "http://localhost:9000";
 
-export const useMainStore = defineStore('main', {
+export const useMainStore = defineStore("main", {
     state: () => ({
         /* User */
         userName: null,
@@ -18,7 +18,9 @@ export const useMainStore = defineStore('main', {
 
         /* Sample data (commonly used) */
         getUserByType: [],
+        getSurveysByAdmin: [],
         getUserByID: {},
+        getSurveyByID: {},
         getSurveyByIDForTake: {},
         history: []
     }),
@@ -42,13 +44,13 @@ export const useMainStore = defineStore('main', {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
                         createToast(`welcome! ${data.response.detail.userProfileName} login Successfully`, {
-                            type: 'success'
+                            type: "success"
                         });
                         callBack(data.response);
                     }
                 })
                 .catch((error) => {
-                    createToast('In valid userName/Password', { type: 'danger' });
+                    createToast("In valid userName/Password", { type: "danger" });
                     console.log(error.message);
                     errorCallBack(error.message);
                 });
@@ -60,12 +62,12 @@ export const useMainStore = defineStore('main', {
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
-                        createToast('Admin Created Successfully', { type: 'success' });
+                        createToast("Admin Created Successfully", { type: "success" });
                         callBack(data.response);
                     }
                 })
                 .catch((error) => {
-                    createToast('Something went wrong try again', { type: 'danger' });
+                    createToast("Something went wrong try again", { type: "danger" });
                     console.log(error.message);
                     errorCallBack(error.message);
                 });
@@ -77,12 +79,12 @@ export const useMainStore = defineStore('main', {
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
-                        createToast('User Register Successfully', { type: 'success' });
+                        createToast("User Register Successfully", { type: "success" });
                         callBack(data.response);
                     }
                 })
                 .catch((error) => {
-                    createToast('Something went wrong try again', { type: 'danger' });
+                    createToast("Something went wrong try again", { type: "danger" });
                     console.log(error.message);
                     errorCallBack(error.message);
                 });
@@ -94,12 +96,12 @@ export const useMainStore = defineStore('main', {
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
-                        createToast('survey Created Successfully', { type: 'success' });
+                        createToast("survey Created Successfully", { type: "success" });
                         callBack(data.response);
                     }
                 })
                 .catch((error) => {
-                    createToast('Something went wrong try again', { type: 'danger' });
+                    createToast("Something went wrong try again", { type: "danger" });
                     console.log(error.message);
                     errorCallBack(error.message);
                 });
@@ -107,16 +109,33 @@ export const useMainStore = defineStore('main', {
 
         deleteAdmin(userId, callBack, errorCallBack = () => {}) {
             axios
-                .put(`${SERVER_URL}/deleteUser/${userId}`, '', { headers: { token: userData?.token } })
+                .put(`${SERVER_URL}/deleteUser/${userId}`, "", { headers: { token: userData?.token } })
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
-                        createToast('Admin Deleted Successfully', { type: 'success' });
+                        createToast("Admin Deleted Successfully", { type: "success" });
                         callBack(data.response);
                     }
                 })
                 .catch((error) => {
-                    createToast('Something went wrong try again', { type: 'danger' });
+                    createToast("Something went wrong try again", { type: "danger" });
+                    console.log(error.message);
+                    errorCallBack(error.message);
+                });
+        },
+
+        deleteSurvey(surveyID, callBack, errorCallBack = () => {}) {
+            axios
+                .put(`${SERVER_URL}/deleteSurvey/${surveyID}`, "", { headers: { token: userData?.token } })
+                .then((response) => {
+                    let { data } = response;
+                    if (response.data.status.statusCode === 200) {
+                        createToast("Survey Deleted Successfully", { type: "success" });
+                        callBack(data.response);
+                    }
+                })
+                .catch((error) => {
+                    createToast("Something went wrong try again", { type: "danger" });
                     console.log(error.message);
                     errorCallBack(error.message);
                 });
@@ -140,7 +159,7 @@ export const useMainStore = defineStore('main', {
                     }
                 })
                 .catch((error) => {
-                    createToast('Something went wrong try again, Please Refresh Page', { type: 'danger' });
+                    createToast("Something went wrong try again, Please Refresh Page", { type: "danger" });
                 });
         }
     }
