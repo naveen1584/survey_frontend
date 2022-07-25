@@ -15,20 +15,21 @@ class Controller {
         this.delete = this.delete.bind(this);
     }
 
-    async sendEmail(recipient, mailSubject, body) {
+    static async sendHTMLMail({ to, subject, text, html }) {
         var transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: "test@gmail.com",
-                pass: "test"
+                user: "mailtesting608@gmail.com",
+                pass: "mail@Testing@608"
             }
         });
 
         var mailOptions = {
-            from: "test@gmail.com",
-            to: recipient,
-            subject: mailSubject,
-            text: body
+            from: "mailtesting608@gmail.com",
+            to: to,
+            subject: subject,
+            text: text,
+            html: html
         };
 
         transporter.sendMail(mailOptions, function (error, info) {

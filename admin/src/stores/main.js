@@ -19,9 +19,11 @@ export const useMainStore = defineStore("main", {
         /* Sample data (commonly used) */
         getUserByType: [],
         getSurveysByAdmin: [],
+        getTakeSurveysByUser: [],
         getUserByID: {},
         getSurveyByID: {},
         getSurveyByIDForTake: {},
+        getTakeSurveyByID: {},
         history: []
     }),
     actions: {
@@ -96,7 +98,7 @@ export const useMainStore = defineStore("main", {
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
-                        createToast("survey Created Successfully", { type: "success" });
+                        createToast("Survey Created Successfully", { type: "success" });
                         callBack(data.response);
                     }
                 })

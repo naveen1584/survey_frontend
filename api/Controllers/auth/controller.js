@@ -162,6 +162,49 @@ class authController extends BaseController {
         }
     }
 
+    async forgotPassword(req, res) {
+        const { userEmail } = req.body;
+        try {
+            const getQry = `SELECT * from users WHERE userEmail = '${userEmail}'`;
+            const getRes = await DBSequelize.query(getQry, {
+                type: Sequelize.QueryTypes.SELECT
+            });
+            if (getRes.length > 0) {
+                var code = Math.random().toString(10).substr(2, 6);
+
+                const result = BaseController.sendHTMLMail({
+                    to: userEmail,
+                    subject: "Password reset Survey",
+                    text: code,
+                    html: `<h1 style='text-align:center'>Password reset code '${code}'</h1>`
+                });
+
+                const insertRecoveryQry = `UPDATE users SET recoveryKey = '${code}' WHERE userEmail = '${userEmail}'`;
+                const insertRecoveryRes = await DBSequelize.query(insertRecoveryQry, {
+                    type: Sequelize.QueryTypes.UPDATE
+                });
+
+                return Response(res)({
+                    message: "Email sent",
+                    statusCode: 200,
+                    response: { result }
+                });
+            } else {
+                return Response(res)({
+                    message: "Invalid Email. Please try again!",
+                    statusCode: 401,
+                    response: {}
+                });
+            }
+        } catch (error) {
+            return Response(res)({
+                message: "Failed",
+                statusCode: 400,
+                response: { error }
+            });
+        }
+    }
+
     async getUserByTypes(req, res) {
         const { roleID } = req.params;
         try {

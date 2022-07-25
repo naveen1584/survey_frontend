@@ -60,7 +60,7 @@ class SurveyController extends BaseController {
     async getTakeSurveyByID(req, res) {
         const { surveyID } = req.params;
         try {
-            var data;
+            var result;
             const getSurveyQry = `SELECT surveyID, surveyName, adminID, userID FROM takesurvey WHERE surveyID = '${surveyID}' AND isDeleted = 0`;
             const getSurveyRes = await DBSequelize.query(getSurveyQry, {
                 type: Sequelize.QueryTypes.SELECT
@@ -71,7 +71,7 @@ class SurveyController extends BaseController {
                     type: Sequelize.QueryTypes.SELECT
                 });
 
-                data = {
+                result = {
                     surveyID: getSurveyRes[0].surveyID,
                     surveyName: getSurveyRes[0].surveyName,
                     adminID: getSurveyRes[0].adminID,
@@ -82,7 +82,7 @@ class SurveyController extends BaseController {
                 return Response(res)({
                     message: "Get Successfully",
                     statusCode: 200,
-                    response: { data }
+                    response: { result }
                 });
             } else {
                 return Response(res)({
@@ -102,7 +102,7 @@ class SurveyController extends BaseController {
 
     async getTakeSurveys(req, res) {
         try {
-            var data = [];
+            var result = [];
             const getSurveyQry = `SELECT surveyID, surveyName, adminID, userID FROM takesurvey WHERE isDeleted = 0`;
             const getSurveyRes = await DBSequelize.query(getSurveyQry, {
                 type: Sequelize.QueryTypes.SELECT
@@ -114,7 +114,7 @@ class SurveyController extends BaseController {
                     type: Sequelize.QueryTypes.SELECT
                 });
 
-                data[j] = {
+                result[j] = {
                     surveyID: getSurveyRes[j].surveyID,
                     surveyName: getSurveyRes[j].surveyName,
                     adminID: getSurveyRes[j].adminID,
@@ -126,7 +126,7 @@ class SurveyController extends BaseController {
             return Response(res)({
                 message: "Get Successfully",
                 statusCode: 200,
-                response: { data }
+                response: { result }
             });
         } catch (error) {
             return Response(res)({
@@ -140,7 +140,7 @@ class SurveyController extends BaseController {
     async getTakeSurveysByAdmin(req, res) {
         const { adminID } = req.params;
         try {
-            var data = [];
+            var result = [];
             const getSurveyQry = `SELECT surveyID, surveyName, adminID, userID FROM takesurvey WHERE adminID = '${adminID}' AND isDeleted = 0`;
             const getSurveyRes = await DBSequelize.query(getSurveyQry, {
                 type: Sequelize.QueryTypes.SELECT
@@ -152,7 +152,7 @@ class SurveyController extends BaseController {
                         type: Sequelize.QueryTypes.SELECT
                     });
 
-                    data[j] = {
+                    result[j] = {
                         surveyID: getSurveyRes[j].surveyID,
                         surveyName: getSurveyRes[j].surveyName,
                         adminID: getSurveyRes[j].adminID,
@@ -164,7 +164,7 @@ class SurveyController extends BaseController {
                 return Response(res)({
                     message: "Get Successfully",
                     statusCode: 200,
-                    response: { data }
+                    response: { result }
                 });
             } else {
                 return Response(res)({
@@ -185,7 +185,7 @@ class SurveyController extends BaseController {
     async getTakeSurveysByUser(req, res) {
         const { userID } = req.params;
         try {
-            var data = [];
+            var result = [];
             const getSurveyQry = `SELECT surveyID, surveyName, adminID, userID FROM takesurvey WHERE userID = '${userID}' AND isDeleted = 0`;
             const getSurveyRes = await DBSequelize.query(getSurveyQry, {
                 type: Sequelize.QueryTypes.SELECT
@@ -197,7 +197,7 @@ class SurveyController extends BaseController {
                         type: Sequelize.QueryTypes.SELECT
                     });
 
-                    data[j] = {
+                    result[j] = {
                         surveyID: getSurveyRes[j].surveyID,
                         surveyName: getSurveyRes[j].surveyName,
                         adminID: getSurveyRes[j].adminID,
@@ -209,7 +209,7 @@ class SurveyController extends BaseController {
                 return Response(res)({
                     message: "Get Successfully",
                     statusCode: 200,
-                    response: { data }
+                    response: { result }
                 });
             } else {
                 return Response(res)({

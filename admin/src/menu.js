@@ -56,6 +56,12 @@ let userACL = [
         role: "user"
     },
     {
+        to: "/addLink",
+        icon: mdiAccountCog,
+        label: `${"Add Survey Link"}`,
+        role: "user"
+    },
+    {
         to: "/user/about",
         icon: mdiAccountCog,
         label: `${"About"}`,

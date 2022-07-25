@@ -45,6 +45,12 @@ const mainStore = useMainStore();
 const clientBarItems = computed(() => mainStore.clients.slice(0, 3));
 
 const transactionBarItems = computed(() => mainStore.history.slice(0, 3));
+
+const emit = defineEmits(["get-link"]);
+
+const getLink = (event, client) => {
+    emit("get-link", event);
+};
 </script>
 
 <template>

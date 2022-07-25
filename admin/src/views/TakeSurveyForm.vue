@@ -1,7 +1,15 @@
 <script setup>
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, onMounted, reactive } from "vue";
 import { useMainStore } from "@/stores/main";
-import { mdiPlus, mdiAccount, mdiPhoneOutline, mdiLockOutline, mdiEmailOutline, mdiAccountOutline } from "@mdi/js";
+import {
+    mdiPlus,
+    mdiLinkVariant,
+    mdiAccount,
+    mdiPhoneOutline,
+    mdiLockOutline,
+    mdiEmailOutline,
+    mdiAccountOutline
+} from "@mdi/js";
 import * as chartConfig from "@/components/Charts/chart.config.js";
 import SectionMain from "@/components/SectionMain.vue";
 import CardBox from "@/components/CardBox.vue";
@@ -13,6 +21,9 @@ import FormControl from "@/components/FormControl.vue";
 import { useRouter } from "vue-router";
 import ViewSurveyModal from "../components/userComponents/ViewTakeSurveyModal.vue";
 import DeleteSurveyModal from "@/components/adminComponents/DeleteSurveyModal.vue";
+import BaseButtons from "@/components/BaseButtons.vue";
+import BaseButton from "@/components/BaseButton.vue";
+
 const titleStack = ref(["Admin", "Dashboard"]);
 
 const chartData = ref(null);
@@ -37,27 +48,32 @@ const isViewSurveyModalActive = ref(false);
 const isDeleteSurveyModalActive = ref(false);
 
 const submit = () => {
-    console.log(form);
+    window.location.replace(form.surveyLink);
 };
+
+const form = reactive({
+    surveyLink: ""
+});
 </script>
 
 <template>
     <SectionMain>
         <SectionTitleBarSub title="Taked Surveys" :baseIcon="mdiPlus" />
-        <ViewSurveyModal v-model="isViewSurveyModalActive" title="View Survey" has-cancel />
-        <DeleteSurveyModal
-            v-model="isDeleteSurveyModalActive"
-            large-title="Please confirm"
-            button="danger"
-            has-cancel
-        />
+        <CardBox form @submit.prevent="submit" has-table componentClass="p-1">
+            <div class="mb-10">
+                <FormField label="Add link here">
+                    <FormControl v-model="form.surveyLink" type="Text" :icon="mdiLinkVariant" required />
+                </FormField>
+            </div>
 
-        <CardBox has-table>
-            <adminSurveysTable
-                @view-click="isViewSurveyModalActive = true"
-                @delete-click="isDeleteSurveyModalActive = true"
-                checkable
-            />
+            <div
+                class="sticky bottom-[25px] p-2 dark:bg-gray-900/70 bg-white border border-gray-100 dark:border-gray-800"
+            >
+                <BaseButtons type="justify-end">
+                    <BaseButton type="submit" color="info" label="Submit" />
+                    <BaseButton type="button" @click="onCancelClick" color="danger" label="Cancel" outline />
+                </BaseButtons>
+            </div>
         </CardBox>
     </SectionMain>
 </template>

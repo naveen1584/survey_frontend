@@ -14,8 +14,9 @@ defineProps({
 });
 
 const mainStore = useMainStore();
+const userData = JSON.parse(localStorage.getItem("userData"));
 
-const items = computed(() => mainStore.getSurveysByAdmin);
+const items = computed(() => mainStore.getTakeSurveysByUser);
 
 const isModalActive = ref(false);
 
@@ -68,15 +69,8 @@ const checked = (isChecked, client) => {
 const emit = defineEmits(["view-click", "delete-click", "client-data"]);
 
 const viewClick = (event, client) => {
-    mainStore.fetch("getSurveyByID", client.surveyID);
-
+    mainStore.fetch("getTakeSurveyByID", client.surveyID);
     emit("view-click", event);
-};
-
-const deleteClick = (event, client) => {
-    mainStore.fetch("getSurveyByID", client.surveyID);
-
-    emit("delete-click", event);
 };
 </script>
 
@@ -96,7 +90,7 @@ const deleteClick = (event, client) => {
             <tr>
                 <th v-if="checkable" />
                 <!-- <th /> -->
-                <th>Survey Name</th>
+                <th>Survey ID</th>
                 <th>Survey Name</th>
                 <th>Admin ID</th>
                 <th />
@@ -117,7 +111,6 @@ const deleteClick = (event, client) => {
                 <td class="before:hidden lg:w-1 whitespace-nowrap">
                     <BaseButtons type="justify-start lg:justify-end" no-wrap>
                         <BaseButton color="info" :icon="mdiEye" small @click="viewClick($event, client)" />
-                        <BaseButton color="danger" :icon="mdiTrashCan" small @click="deleteClick($event, client)" />
                     </BaseButtons>
                 </td>
             </tr>

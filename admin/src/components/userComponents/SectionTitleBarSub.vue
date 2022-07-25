@@ -2,6 +2,8 @@
 import { mdiCog } from "@mdi/js";
 import BaseIcon from "@/components/BaseIcon.vue";
 import BaseButton from "@/components/BaseButton.vue";
+import FormField from "../FormField.vue";
+import FormControl from "../FormControl.vue";
 
 defineProps({
     baseIcon: {
@@ -50,6 +52,9 @@ const surveyClick = (event) => {
             </h1>
         </div>
         <div class="flex items-center justify-start">
+            <FormField label="Name">
+                <FormControl v-model="form.userProfileName" type="Text" :icon="mdiAccount" required />
+            </FormField>
             <BaseButton
                 v-if="surveyIcon || surveyLabel"
                 :icon="surveyIcon"

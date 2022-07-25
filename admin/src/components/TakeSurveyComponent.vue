@@ -1,26 +1,43 @@
 <script setup>
-import { mdiStarOutline } from '@mdi/js';
-import { ref, reactive } from 'vue';
-import BaseIcon from '@/components/BaseIcon.vue';
-import { useForm, Head, Link } from '@inertiajs/inertia-vue3';
-import FormField from './FormField.vue';
-import FormControl from './FormControl.vue';
-import Scale from '@/views/scale.vue';
-import BaseButton from './BaseButton.vue';
-import BaseButtons from './BaseButtons.vue';
-import CardBox from './CardBox.vue';
-import FormCheckRadioPicker from './FormCheckRadioPicker.vue';
+import { mdiStarOutline } from "@mdi/js";
+import { computed, ref, reactive, onMounted } from "vue";
+import BaseIcon from "@/components/BaseIcon.vue";
+import { useForm, Head, Link } from "@inertiajs/inertia-vue3";
+import FormField from "./FormField.vue";
+import FormControl from "./FormControl.vue";
+import Scale from "@/views/scale.vue";
+import BaseButton from "./BaseButton.vue";
+import BaseButtons from "./BaseButtons.vue";
+import CardBox from "./CardBox.vue";
+import FormCheckRadioPicker from "./FormCheckRadioPicker.vue";
+import { useMainStore } from "@/stores/main";
+import { useRouter } from "vue-router";
 
-import { useRouter } from 'vue-router';
-
+const mainStore = useMainStore();
 const router = useRouter();
 
 const submit = () => {
-    console.log('submit :');
+    console.log("submit :");
 };
 
 const onCancelClick = () => {
-    router.push('/dashboard');
+    router.push("/dashboard");
+};
+
+// onMounted(() => {
+//     let getID = createLink();
+//     console.log(getID);
+//     mainStore.fetch("getSurveyByIDForTake", getID);
+// });
+
+// const TakeSurveyDataByID = mainStore.computed(() => mainStore.getSurveyByIDForTake);
+// console.log("TakeSurveyDataByID", TakeSurveyDataByID);
+
+const createLink = () => {
+    let URI = window.location.hash;
+    let data = URI.split("/");
+    let ID = data[data.length - 1];
+    return ID;
 };
 
 const restOptions = (arr) => {
@@ -34,50 +51,50 @@ const restOptions = (arr) => {
 };
 
 const data = {
-    surveyID: 'SR004',
-    surveyName: 'Second Survey',
+    surveyID: "SR004",
+    surveyName: "Second Survey",
     adminID: 1,
     choiceQuestions: [
         {
-            question: 'What is your Country 1',
-            options: ['US', 'UK', 'Island', 'india']
+            question: "What is your Country 1",
+            options: ["US", "UK", "Island", "india"]
         },
         {
-            question: 'What is your Country 2',
-            options: ['US', 'UK', 'Island']
+            question: "What is your Country 2",
+            options: ["US", "UK", "Island"]
         },
         {
-            question: 'What is your Country 3',
-            options: ['US', 'UK', 'Island']
+            question: "What is your Country 3",
+            options: ["US", "UK", "Island"]
         },
         {
-            question: 'What is your Country 4',
-            options: ['US', 'UK', 'Island']
+            question: "What is your Country 4",
+            options: ["US", "UK", "Island"]
         },
         {
-            question: 'What is your Country 5',
-            options: ['US', 'UK', 'Island']
+            question: "What is your Country 5",
+            options: ["US", "UK", "Island"]
         }
     ],
     textQuestions: [
         {
-            question: 'What is your city 1',
+            question: "What is your city 1",
             options: []
         },
         {
-            question: 'What is your city 2',
+            question: "What is your city 2",
             options: []
         },
         {
-            question: 'What is your city 3',
+            question: "What is your city 3",
             options: []
         },
         {
-            question: 'What is your city 4',
+            question: "What is your city 4",
             options: []
         },
         {
-            question: 'What is your city 5',
+            question: "What is your city 5",
             options: []
         }
     ]

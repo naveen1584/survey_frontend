@@ -1,22 +1,11 @@
 <script setup>
-import { computed, onMounted, reactive } from "vue";
-import {
-    mdiClose,
-    mdiAccountOutline,
-    mdiEmailOutline,
-    mdiPhoneOutline,
-    mdiLockOutline,
-    mdiAccount,
-    mdiCalendarAccount
-} from "@mdi/js";
+import { computed } from "vue";
+import { mdiClose } from "@mdi/js";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import CardBox from "@/components/CardBox.vue";
 import BaseDivider from "@/components/BaseDivider.vue";
 import OverlayLayer from "@/components/OverlayLayer.vue";
-import FormField from "../FormField.vue";
-import FormControl from "../FormControl.vue";
-import { useMainStore } from "@/stores/main.js";
 
 const props = defineProps({
     title: {
@@ -43,8 +32,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update:modelValue", "cancel", "confirm"]);
-const mainStore = useMainStore();
-const surveyDataByID = computed(() => mainStore.getSurveyByID);
 
 const value = computed({
     get: () => props.modelValue,
@@ -56,15 +43,7 @@ const confirmCancel = (mode) => {
     emit(mode);
 };
 
-const confirm = () => confirmCancel("confirm");
-
 const cancel = () => confirmCancel("cancel");
-
-const createLink = (id) => {
-    let URI = window.location.origin;
-    let link = URI + "/#/takeSurvey/" + id;
-    return link;
-};
 </script>
 
 <template>
@@ -82,28 +61,7 @@ const createLink = (id) => {
                 <h1 v-if="largeTitle" class="text-2xl">
                     {{ largeTitle }}
                 </h1>
-                <div class="p-2">
-                    <div class="flex">
-                        <div class="w-1/2 font-bold">Survey ID</div>
-                        <div class="w-1/2">{{ surveyDataByID.surveyID }}</div>
-                    </div>
-                    <BaseDivider />
-                    <div class="flex">
-                        <div class="w-1/2 font-bold">Survey Name</div>
-                        {{ surveyDataByID.surveyName }}
-                    </div>
-                    <BaseDivider />
-                    <div class="flex">
-                        <div class="w-1/2 font-bold">Admin ID</div>
-                        {{ surveyDataByID.adminID }}
-                    </div>
-                    <BaseDivider />
-                    <div class="flex">
-                        <div class="w-1/2 font-bold">Survey Link</div>
-                        {{ createLink(surveyDataByID.surveyID) }}
-                    </div>
-                    <BaseDivider />
-                </div>
+                <p></p>
             </div>
 
             <BaseDivider />

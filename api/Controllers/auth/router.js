@@ -10,6 +10,8 @@ router.post("/createClientUser", controller.createUser);
 
 router.post("/auth", controller.auth);
 
+router.post("/forgotPassword", controller.forgotPassword);
+
 router.get("/getRoles", decodeJWTMiddleWare, controller.getRoles);
 
 router.get("/getUserByType/:roleID", decodeJWTMiddleWare, controller.getUserByTypes);

@@ -5,6 +5,7 @@ import AdminVue from "@/views/AdminVue.vue";
 import CreateSurvey from "@/views/CreateSurvey.vue";
 import TakeSurveyVue from "@/views/TakeSurvey.vue";
 import UserView from "@/views/UserView.vue";
+import TakeSurveyForm from "@/views/TakeSurveyForm.vue";
 
 const routes = [
     {
@@ -44,9 +45,17 @@ const routes = [
         meta: {
             title: "Take Survey"
         },
-        path: "/takeSurvey",
+        path: "/takeSurvey/:surveyID",
         name: "takeSurvey",
         component: TakeSurveyVue
+    },
+    {
+        meta: {
+            title: "Add Survey Link"
+        },
+        path: "/addLink",
+        name: "addLink",
+        component: TakeSurveyForm
     },
     {
         meta: {

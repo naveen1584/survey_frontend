@@ -44,8 +44,7 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue", "cancel", "confirm"]);
 const mainStore = useMainStore();
-const surveyDataByID = computed(() => mainStore.getSurveyByID);
-
+const TakeSurveyDataByID = computed(() => mainStore.getTakeSurveyByID);
 const value = computed({
     get: () => props.modelValue,
     set: (value) => emit("update:modelValue", value)
@@ -85,22 +84,22 @@ const createLink = (id) => {
                 <div class="p-2">
                     <div class="flex">
                         <div class="w-1/2 font-bold">Survey ID</div>
-                        <div class="w-1/2">{{ surveyDataByID.surveyID }}</div>
+                        <div class="w-1/2">{{ TakeSurveyDataByID.surveyID }}</div>
                     </div>
                     <BaseDivider />
                     <div class="flex">
                         <div class="w-1/2 font-bold">Survey Name</div>
-                        {{ surveyDataByID.surveyName }}
+                        {{ TakeSurveyDataByID.surveyName }}
                     </div>
                     <BaseDivider />
                     <div class="flex">
                         <div class="w-1/2 font-bold">Admin ID</div>
-                        {{ surveyDataByID.adminID }}
+                        {{ TakeSurveyDataByID.adminID }}
                     </div>
                     <BaseDivider />
                     <div class="flex">
                         <div class="w-1/2 font-bold">Survey Link</div>
-                        {{ createLink(surveyDataByID.surveyID) }}
+                        {{ createLink(TakeSurveyDataByID.surveyID) }}
                     </div>
                     <BaseDivider />
                 </div>

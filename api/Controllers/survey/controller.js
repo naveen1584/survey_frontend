@@ -115,7 +115,7 @@ class SurveyController extends BaseController {
     async getSurveyByIDForTake(req, res) {
         const { surveyID } = req.params;
         try {
-            var data;
+            var result;
             var textQuestions = [];
             var choiceQuestions = [];
             var p = 0;
@@ -154,7 +154,7 @@ class SurveyController extends BaseController {
                     }
                 }
 
-                data = {
+                result = {
                     surveyID: getSurveyRes[0].surveyID,
                     surveyName: getSurveyRes[0].surveyName,
                     adminID: getSurveyRes[0].adminID,
@@ -165,7 +165,7 @@ class SurveyController extends BaseController {
                 return Response(res)({
                     message: "Get Successfully",
                     statusCode: 200,
-                    response: { data }
+                    response: { result }
                 });
             } else {
                 return Response(res)({

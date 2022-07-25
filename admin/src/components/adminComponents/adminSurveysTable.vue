@@ -78,6 +78,12 @@ const deleteClick = (event, client) => {
 
     emit("delete-click", event);
 };
+
+const createLink = (id) => {
+    let URI = window.location.origin;
+    let link = URI + "/#/takeSurvey/" + id;
+    return link;
+};
 </script>
 
 <template>
@@ -99,6 +105,7 @@ const deleteClick = (event, client) => {
                 <th>Survey Name</th>
                 <th>Survey Name</th>
                 <th>Admin ID</th>
+                <th>Survey Link</th>
                 <th />
             </tr>
         </thead>
@@ -111,8 +118,11 @@ const deleteClick = (event, client) => {
                 <td data-label="Email">
                     {{ client.surveyName }}
                 </td>
-                <td data-label="Email">
+                <td data-label="AdminID">
                     {{ client.adminID }}
+                </td>
+                <td data-label="Survey Link">
+                    {{ createLink(client.surveyID) }}
                 </td>
                 <td class="before:hidden lg:w-1 whitespace-nowrap">
                     <BaseButtons type="justify-start lg:justify-end" no-wrap>
