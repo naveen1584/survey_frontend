@@ -1,26 +1,28 @@
 <script setup>
-import { mdiStarOutline } from '@mdi/js';
-import { ref, reactive } from 'vue';
-import BaseIcon from '@/components/BaseIcon.vue';
-import { useForm, Head, Link } from '@inertiajs/inertia-vue3';
-import FormField from './FormField.vue';
-import FormControl from './FormControl.vue';
-import Scale from '@/views/scale.vue';
-import BaseButton from './BaseButton.vue';
-import BaseButtons from './BaseButtons.vue';
-import CardBox from './CardBox.vue';
-import FormCheckRadioPicker from './FormCheckRadioPicker.vue';
+import { mdiStarOutline } from "@mdi/js";
+import { ref, reactive } from "vue";
+import BaseIcon from "@/components/BaseIcon.vue";
+import { useForm, Head, Link } from "@inertiajs/inertia-vue3";
+import FormField from "./FormField.vue";
+import FormControl from "./FormControl.vue";
+import Scale from "@/views/scale.vue";
+import BaseButton from "./BaseButton.vue";
+import BaseButtons from "./BaseButtons.vue";
+import CardBox from "./CardBox.vue";
+import FormCheckRadioPicker from "./FormCheckRadioPicker.vue";
 
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
 const submit = () => {
-    console.log('submit :');
+    console.log("submit :");
 };
 
+const form = reactive({});
+
 const onCancelClick = () => {
-    router.push('/dashboard');
+    router.push("/dashboard");
 };
 
 const restOptions = (arr) => {
@@ -34,50 +36,50 @@ const restOptions = (arr) => {
 };
 
 const data = {
-    surveyID: 'SR004',
-    surveyName: 'Second Survey',
+    surveyID: "SR004",
+    surveyName: "Second Survey",
     adminID: 1,
     choiceQuestions: [
         {
-            question: 'What is your Country 1',
-            options: ['US', 'UK', 'Island', 'india']
+            question: "What is your Country 1",
+            options: ["US", "UK", "Island", "india"]
         },
         {
-            question: 'What is your Country 2',
-            options: ['US', 'UK', 'Island']
+            question: "What is your Country 2",
+            options: ["US", "UK", "Island"]
         },
         {
-            question: 'What is your Country 3',
-            options: ['US', 'UK', 'Island']
+            question: "What is your Country 3",
+            options: ["US", "UK", "Island"]
         },
         {
-            question: 'What is your Country 4',
-            options: ['US', 'UK', 'Island']
+            question: "What is your Country 4",
+            options: ["US", "UK", "Island"]
         },
         {
-            question: 'What is your Country 5',
-            options: ['US', 'UK', 'Island']
+            question: "What is your Country 5",
+            options: ["US", "UK", "Island"]
         }
     ],
     textQuestions: [
         {
-            question: 'What is your city 1',
+            question: "What is your city 1",
             options: []
         },
         {
-            question: 'What is your city 2',
+            question: "What is your city 2",
             options: []
         },
         {
-            question: 'What is your city 3',
+            question: "What is your city 3",
             options: []
         },
         {
-            question: 'What is your city 4',
+            question: "What is your city 4",
             options: []
         },
         {
-            question: 'What is your city 5',
+            question: "What is your city 5",
             options: []
         }
     ]
@@ -85,14 +87,20 @@ const data = {
 </script>
 
 <template>
-    <CardBox form @submit.prevent="submit" has-table componentClass="p-1">
+    <CardBox class="p-3" form @submit.prevent="submit" has-table componentClass="p-1">
         <div class="mb-10" v-for="(item, index) in data.choiceQuestions">
-            <FormField :key="item.id" :label="`Question No.${index + 1}: ${item.question}`">
+            <FormField :key="index" :label="`Question No.${index + 1}: ${item.question}`">
                 <div></div>
             </FormField>
 
             <FormField label="Please choose one answer:">
-                <FormCheckRadioPicker type="radio" :options="restOptions(item.options)" />
+                <FormCheckRadioPicker
+                    class="justify-between"
+                    v-model="form[`choiceQuestionsAnswer${index}`]"
+                    :key="index"
+                    type="radio"
+                    :options="restOptions(item.options)"
+                />
             </FormField>
         </div>
         <div v-for="item in data.textQuestions">
