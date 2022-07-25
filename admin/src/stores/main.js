@@ -20,6 +20,7 @@ export const useMainStore = defineStore("main", {
         getUserByType: [],
         getSurveysByAdmin: [],
         getTakeSurveysByUser: [],
+        userDetail: {},
         getUserByID: {},
         getSurveyByID: {},
         getSurveyByIDForTake: {},
@@ -45,14 +46,17 @@ export const useMainStore = defineStore("main", {
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
+                        this["userDetail"] = data.response;
                         createToast(`welcome! ${data.response.detail.userProfileName} login Successfully`, {
                             type: "success"
                         });
                         callBack(data.response);
+                        console.log(this.userDetail);
                     }
                 })
                 .catch((error) => {
-                    createToast("In valid userName/Password", { type: "danger" });
+                    console.log(error);
+                    createToast(`${error.response.data.status.message}`, { type: "danger" });
                     console.log(error.message);
                     errorCallBack(error.message);
                 });
@@ -111,7 +115,9 @@ export const useMainStore = defineStore("main", {
 
         deleteAdmin(userId, callBack, errorCallBack = () => {}) {
             axios
-                .put(`${SERVER_URL}/deleteUser/${userId}`, "", { headers: { token: userData?.token } })
+                .put(`${SERVER_URL}/deleteUser/${userId}`, "", {
+                    headers: { token: userData?.token ? userData?.token : this.userDetail.token }
+                })
                 .then((response) => {
                     let { data } = response;
                     if (response.data.status.statusCode === 200) {
@@ -146,9 +152,7 @@ export const useMainStore = defineStore("main", {
         fetch(sampleDataKey, userID) {
             axios
                 .get(`${SERVER_URL}/${sampleDataKey}/${userID}`, {
-                    headers: {
-                        token: userData?.token
-                    }
+                    headers: { token: userData?.token ? userData?.token : this.userDetail.token }
                 })
                 .then((response) => {
                     let {

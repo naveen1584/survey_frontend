@@ -20,6 +20,8 @@ const submit = () => {
     console.log("submit :");
 };
 
+const form = reactive({});
+
 const onCancelClick = () => {
     router.push("/dashboard");
 };
@@ -102,14 +104,20 @@ const data = {
 </script>
 
 <template>
-    <CardBox form @submit.prevent="submit" has-table componentClass="p-1">
+    <CardBox class="p-3" form @submit.prevent="submit" has-table componentClass="p-1">
         <div class="mb-10" v-for="(item, index) in data.choiceQuestions">
-            <FormField :key="item.id" :label="`Question No.${index + 1}: ${item.question}`">
+            <FormField :key="index" :label="`Question No.${index + 1}: ${item.question}`">
                 <div></div>
             </FormField>
 
             <FormField label="Please choose one answer:">
-                <FormCheckRadioPicker type="radio" :options="restOptions(item.options)" />
+                <FormCheckRadioPicker
+                    class="justify-between"
+                    v-model="form[`choiceQuestionsAnswer${index}`]"
+                    :key="index"
+                    type="radio"
+                    :options="restOptions(item.options)"
+                />
             </FormField>
         </div>
         <div v-for="item in data.textQuestions">

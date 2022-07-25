@@ -32,7 +32,7 @@ import NavBarSearch from "@/components/NavBarSearch.vue";
 
 const mainStore = useMainStore();
 
-const userName = computed(() => mainStore.userName);
+const userDetail = computed(() => mainStore.userDetail);
 const userData = JSON.parse(localStorage.getItem("userData"));
 
 const styleStore = useStyleStore();
@@ -153,7 +153,13 @@ const logout = () => {
           </template>
         </NavBarMenu> -->
                 <NavBarMenu has-divider>
-                    <NavBarItemLabel :label="userData?.detail?.userProfileName">
+                    <NavBarItemLabel
+                        :label="`${
+                            userData?.detail?.userProfileName
+                                ? userData?.detail?.userProfileName
+                                : userDetail?.detail?.userProfileName
+                        }`"
+                    >
                         <UserAvatar class="w-6 h-6 mr-3 inline-flex" />
                     </NavBarItemLabel>
 
