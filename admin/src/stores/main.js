@@ -115,6 +115,23 @@ export const useMainStore = defineStore("main", {
                 });
         },
 
+        addTakeSurvey(body, callBack, errorCallBack = () => {}) {
+            axios
+                .post(`${SERVER_URL}/createTakeSurvey`, body, { headers: { token: userData?.token } })
+                .then((response) => {
+                    let { data } = response;
+                    if (response.data.status.statusCode === 200) {
+                        createToast("Survey Taken Successfully", { type: "success" });
+                        callBack(data.response);
+                    }
+                })
+                .catch((error) => {
+                    createToast("Something went wrong try again", { type: "danger" });
+                    console.log(error.message);
+                    errorCallBack(error.message);
+                });
+        },
+
         deleteAdmin(userId, callBack, errorCallBack = () => {}) {
             axios
                 .put(`${SERVER_URL}/deleteUser/${userId}`, "", {

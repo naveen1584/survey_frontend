@@ -168,7 +168,7 @@ const submit = () => {
 };
 
 const onCancelClick = () => {
-    router.push("/dashboard");
+    router.push("/admin/surveys");
 };
 
 const items = [

@@ -14,6 +14,7 @@ import BaseButtons from "@/components/BaseButtons.vue";
 import { useRouter } from "vue-router";
 import { useMainStore } from "@/stores/main";
 import { reactive } from "@vue/reactivity";
+import { createToast } from "mosha-vue-toastify";
 // import FormValidationErrors from "@/components/FormValidationErrors.vue";
 
 const router = useRouter();
@@ -41,18 +42,22 @@ const resetForm = () => {
 
 const submit = () => {
     console.log(form);
-    form.processing = true;
-    mainStore.createUser(
-        form,
-        (res) => {
-            form.processing = false;
-            console.log(res);
-            resetForm();
-        },
-        (err) => {
-            form.processing = false;
-        }
-    );
+    if (form.userPassword != form.userConfirmedPassword) {
+        createToast("Password Mismatched", { type: "danger" });
+    } else {
+        form.processing = true;
+        mainStore.createUser(
+            form,
+            (res) => {
+                form.processing = false;
+                console.log(res);
+                resetForm();
+            },
+            (err) => {
+                form.processing = false;
+            }
+        );
+    }
 };
 </script>
 
@@ -87,7 +92,12 @@ const submit = () => {
                 label-for="password_confirmation"
                 help="Please confirm your password"
             >
-                <FormControl v-model="form.userPassword" :icon="mdiFormTextboxPassword" type="password" required />
+                <FormControl
+                    v-model="form.userConfirmedPassword"
+                    :icon="mdiFormTextboxPassword"
+                    type="password"
+                    required
+                />
             </FormField>
 
             <!-- <FormCheckRadioPicker
