@@ -14,26 +14,84 @@ import { useMainStore } from "@/stores/main";
 import { useRouter } from "vue-router";
 
 const mainStore = useMainStore();
+const TakeSurveyDataByID = computed(() => mainStore.getSurveyByIDForTake);
+const userData = JSON.parse(localStorage.getItem("userData"));
+
 const router = useRouter();
 
 const submit = () => {
-    console.log("submit :");
+    const payload = {
+        data: {
+            surveyID: mainStore.getSurveyByIDForTake.surveyID,
+            surveyName: mainStore.getSurveyByIDForTake.surveyName,
+            adminID: mainStore.getSurveyByIDForTake.adminID,
+            userID: userData.detail.userID,
+            questions: [
+                {
+                    question: mainStore.getSurveyByIDForTake.choiceQuestions[0].question,
+                    answer: form.choiceQuestionsAnswer1
+                },
+                {
+                    question: mainStore.getSurveyByIDForTake.choiceQuestions[1].question,
+                    answer: form.choiceQuestionsAnswer2
+                },
+                {
+                    question: mainStore.getSurveyByIDForTake.choiceQuestions[2].question,
+                    answer: form.choiceQuestionsAnswer3
+                },
+                {
+                    question: mainStore.getSurveyByIDForTake.choiceQuestions[3].question,
+                    answer: form.choiceQuestionsAnswer4
+                },
+                {
+                    question: mainStore.getSurveyByIDForTake.choiceQuestions[4].question,
+                    answer: form.choiceQuestionsAnswer5
+                },
+                {
+                    question: mainStore.getSurveyByIDForTake.textQuestions[0].question,
+                    answer: form.textQuestionsAnswer1
+                },
+                {
+                    question: mainStore.getSurveyByIDForTake.textQuestions[1].question,
+                    answer: form.textQuestionsAnswer2
+                },
+                {
+                    question: mainStore.getSurveyByIDForTake.textQuestions[2].question,
+                    answer: form.textQuestionsAnswer3
+                },
+                {
+                    question: mainStore.getSurveyByIDForTake.textQuestions[3].question,
+                    answer: form.textQuestionsAnswer4
+                },
+                {
+                    question: mainStore.getSurveyByIDForTake.textQuestions[4].question,
+                    answer: form.textQuestionsAnswer5
+                }
+            ]
+        }
+    };
+    mainStore.addTakeSurvey(
+        payload,
+        (res) => {
+            router.push("/user/dashboard");
+        },
+        (err) => {
+            console.log(err);
+        }
+    );
 };
 
 const form = reactive({});
 
 const onCancelClick = () => {
-    router.push("/dashboard");
+    router.push("/user/dashboard");
 };
 
-// onMounted(() => {
-//     let getID = createLink();
-//     console.log(getID);
-//     mainStore.fetch("getSurveyByIDForTake", getID);
-// });
-
-// const TakeSurveyDataByID = mainStore.computed(() => mainStore.getSurveyByIDForTake);
-// console.log("TakeSurveyDataByID", TakeSurveyDataByID);
+onMounted(() => {
+    let getID = createLink();
+    console.log(getID);
+    mainStore.fetch("getSurveyByIDForTake", getID);
+});
 
 const createLink = () => {
     let URI = window.location.hash;
@@ -43,88 +101,42 @@ const createLink = () => {
 };
 
 const restOptions = (arr) => {
-    console.log(arr);
     const obj = {};
     arr.map((key) => {
         obj[key] = key;
     });
-    console.log(obj);
     return obj;
-};
-
-const data = {
-    surveyID: "SR004",
-    surveyName: "Second Survey",
-    adminID: 1,
-    choiceQuestions: [
-        {
-            question: "What is your Country 1",
-            options: ["US", "UK", "Island", "india"]
-        },
-        {
-            question: "What is your Country 2",
-            options: ["US", "UK", "Island"]
-        },
-        {
-            question: "What is your Country 3",
-            options: ["US", "UK", "Island"]
-        },
-        {
-            question: "What is your Country 4",
-            options: ["US", "UK", "Island"]
-        },
-        {
-            question: "What is your Country 5",
-            options: ["US", "UK", "Island"]
-        }
-    ],
-    textQuestions: [
-        {
-            question: "What is your city 1",
-            options: []
-        },
-        {
-            question: "What is your city 2",
-            options: []
-        },
-        {
-            question: "What is your city 3",
-            options: []
-        },
-        {
-            question: "What is your city 4",
-            options: []
-        },
-        {
-            question: "What is your city 5",
-            options: []
-        }
-    ]
 };
 </script>
 
 <template>
     <CardBox class="p-3" form @submit.prevent="submit" has-table componentClass="p-1">
-        <div class="mb-10" v-for="(item, index) in data.choiceQuestions">
+        <div class="mb-10" v-for="(item, index) in TakeSurveyDataByID.choiceQuestions">
             <FormField :key="index" :label="`Question No.${index + 1}: ${item.question}`">
                 <div></div>
             </FormField>
 
             <FormField label="Please choose one answer:">
                 <FormCheckRadioPicker
+                    required
                     class="justify-between"
-                    v-model="form[`choiceQuestionsAnswer${index}`]"
+                    v-model="form[`choiceQuestionsAnswer${index + 1}`]"
                     :key="index"
                     type="radio"
                     :options="restOptions(item.options)"
                 />
             </FormField>
         </div>
-        <div v-for="item in data.textQuestions">
-            <FormField :key="item.id" :label="`${item.question}`"><div></div> </FormField>
+        <div v-for="(item, index) in TakeSurveyDataByID.textQuestions">
+            <FormField :key="item.id" :label="`Question No.${index + 6}: ${item.question}`"><div></div> </FormField>
 
             <FormField label="Answers">
-                <FormControl type="textarea" placeholder="Enter your Answer here" />
+                <FormControl
+                    type="textarea"
+                    v-model="form[`textQuestionsAnswer${index + 1}`]"
+                    placeholder="Enter your Answer here"
+                    required
+                />
             </FormField>
         </div>
         <div class="sticky bottom-[25px] p-2 dark:bg-gray-900/70 bg-white border border-gray-100 dark:border-gray-800">
