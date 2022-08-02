@@ -79,7 +79,7 @@ const componentClass = computed(() => {
     'focus:outline-none',
     'transition-colors',
     'focus:ring',
-    'duration-150',
+    // 'duration-150',
     'border',
     'rounded',
     props.active ? 'ring ring-black dark:ring-white' : 'ring-blue-700',
