@@ -1,107 +1,77 @@
 <script setup>
-import { computed, ref, onMounted, reactive } from 'vue'
-import { useMainStore } from '@/stores/main'
-import {
-  mdiAccountMultiple,
-  mdiCartOutline,
-  mdiChartTimelineVariant,
-  mdiFinance,
-  mdiMonitorCellphone,
-  mdiReload,
-  mdiGithub,
-  mdiChartPie,
-  mdiPlus,
-  mdiMail,
-  mdiAccount,
-  mdiPhoneOutline,
-  mdiLockOutline,
-  mdiEmailOutline,
-  mdiAccountOutline
-} from '@mdi/js'
-import * as chartConfig from '@/components/Charts/chart.config.js'
-import LineChart from '@/components/Charts/LineChart.vue'
-import SectionMain from '@/components/SectionMain.vue'
-import SectionTitleBar from '@/components/SectionTitleBar.vue'
-import SectionHeroBar from '@/components/SectionHeroBar.vue'
-import CardBoxWidget from '@/components/CardBoxWidget.vue'
-import CardBox from '@/components/CardBox.vue'
-import TableSampleClients from '@/components/TableSampleClients.vue'
-import CardBoxModal from '@/components/CardBoxModal.vue'
-import NotificationBar from '@/components/NotificationBar.vue'
-import BaseButton from '@/components/BaseButton.vue'
-import CardBoxTransaction from '@/components/CardBoxTransaction.vue'
-import CardBoxClient from '@/components/CardBoxClient.vue'
-import SectionTitleBarSub from '@/components/SectionTitleBarSub.vue'
-import FormField from '@/components/FormField.vue'
-import FormControl from '@/components/FormControl.vue'
+import { computed, ref, onMounted } from "vue";
+import { useMainStore } from "@/stores/main";
+import { mdiPlus, mdiAccount, mdiPhoneOutline, mdiLockOutline, mdiEmailOutline, mdiAccountOutline } from "@mdi/js";
+import * as chartConfig from "@/components/Charts/chart.config.js";
+import SectionMain from "@/components/SectionMain.vue";
+import CardBox from "@/components/CardBox.vue";
+import TableSampleClients from "@/components/TableSampleClients.vue";
+import CardBoxModal from "@/components/CardBoxModal.vue";
+import SectionTitleBarSub from "@/components/SectionTitleBarSub.vue";
+import FormField from "@/components/FormField.vue";
+import FormControl from "@/components/FormControl.vue";
+import { useRouter } from "vue-router";
+import AddAdminModal from "@/components/AddAdminModal.vue";
+import ViewAdminModal from "../components/ViewAdminModal.vue";
+import DeleteAdminModal from "@/components/DeleteAdminModal.vue";
 
+const titleStack = ref(["Admin", "Dashboard"]);
 
-const titleStack = ref(['Admin', 'Dashboard'])
-
-const chartData = ref(null)
+const chartData = ref(null);
+const router = useRouter();
 
 const fillChartData = () => {
-  chartData.value = chartConfig.sampleChartData()
-}
+    chartData.value = chartConfig.sampleChartData();
+};
 
 onMounted(() => {
-  fillChartData()
-})
+    mainStore.fetch("getUserByType", 2);
+    fillChartData();
+});
 
+const mainStore = useMainStore();
 
-const form = reactive({
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  phone: '',
- 
-})
+const clientBarItems = computed(() => mainStore.clients.slice(0, 3));
 
-const mainStore = useMainStore()
+const transactionBarItems = computed(() => mainStore.history.slice(0, 3));
 
-const clientBarItems = computed(() => mainStore.clients.slice(0, 3))
-
-const transactionBarItems = computed(() => mainStore.history.slice(0, 3))
-
-const isAddAdminModalActive = ref(false)
+const isAddAdminModalActive = ref(false);
+const isViewAdminModalActive = ref(false);
+const isDeleteAdminModalActive = ref(false);
 
 const submit = () => {
+    console.log(form);
+};
 
-}
-
+const surveyClick = () => {
+    router.push("/createSurvey");
+};
 </script>
 
 <template>
-  <!-- <SectionTitleBar :title-stack="titleStack" /> -->
-  <SectionHeroBar>Dashboard</SectionHeroBar>
-  <SectionMain>
+    <!-- <SectionTitleBar :title-stack="titleStack" /> -->
+    <!-- <SectionHeroBar>Dashboard</SectionHeroBar> -->
+    <SectionMain>
+        <SectionTitleBarSub
+            title="Admins"
+            @bicon-click="isAddAdminModalActive = true"
+            :baseIcon="mdiPlus"
+            baseLabel="Add Admin"
+            surveyLabel="Create Survey"
+            @survey-click="surveyClick"
+            :surveyIcon="mdiPlus"
+        />
+        <AddAdminModal v-model="isAddAdminModalActive" title="Add Admin" buttonLabel="Submit" has-cancel />
+        <ViewAdminModal v-model="isViewAdminModalActive" title="View Admin" has-cancel />
+        <!-- <ViewAdminModal v-model="isDeleteAdminModalActive" title="Delete Admin" /> -->
+        <DeleteAdminModal v-model="isDeleteAdminModalActive" large-title="Please confirm" button="danger" has-cancel />
 
-    <SectionTitleBarSub title="Admins" @bicon-click="isAddAdminModalActive=true" :baseIcon="mdiPlus"
-      baseLabel="Add Admin" />
-    <CardBoxModal v-model="isAddAdminModalActive" title="Add Admin">
-      <CardBox class="max-h-[22rem] overflow-auto " form @submit.prevent="submit" has-table componentClass="p-1">
-        <FormField label="First Name">
-          <FormControl v-model="form.name" type="email" :icon="mdiAccountOutline" />
-        </FormField>
-        <FormField label="Last Name">
-          <FormControl v-model="form.name" type="email" :icon="mdiAccountOutline" />
-        </FormField>
-        <FormField label="Profile Name">
-          <FormControl v-model="form.name" type="email" :icon="mdiAccount" />
-        </FormField>
-        <FormField label="Email">
-          <FormControl v-model="form.email" type="email" :icon="mdiEmailOutline" />
-        </FormField>
-        <FormField label="Phone Number">
-          <FormControl v-model="form.phone" type="number" :icon="mdiPhoneOutline" />
-        </FormField>
-        <FormField label="Password">
-          <FormControl v-model="form.password" type="password" :icon="mdiLockOutline" />
-        </FormField>
-      </CardBox>
-    </CardBoxModal>
-
-    <CardBox has-table>
-      <TableSampleClients />
-    </CardBox>
-  </SectionMain>
+        <CardBox has-table>
+            <TableSampleClients
+                @view-click="isViewAdminModalActive = true"
+                @delete-click="isDeleteAdminModalActive = true"
+                checkable
+            />
+        </CardBox>
+    </SectionMain>
 </template>
