@@ -14,82 +14,83 @@ import {
     mdiPalette
 } from "@mdi/js";
 
-const userData = localStorage.getItem("userData");
-
-export default [
+const userData = JSON.parse(localStorage.getItem("userData"));
+let loggedInUserID = userData?.userRole;
+let main = [];
+let superAdminACL = [
     "General",
-    [
-        {
-            to: "/dashboard",
-            icon: mdiAccountCog,
-            label: `${"Admin"}`
-        }
-    ]
-    // "Examples",
-    // [
-    //     {
-    //         to: "/tables",
-    //         label: "Tables",
-    //         icon: mdiTable
-    //     },
-    //     {
-    //         to: "/forms",
-    //         label: "Forms",
-    //         icon: mdiSquareEditOutline
-    //     },
-    // {
-    //     to: "/ui",
-    //     label: "UI",
-    //     icon: mdiTelevisionGuide
-    // },
-    // {
-    //     to: "/responsive",
-    //     label: "Responsive",
-    //     icon: mdiResponsive
-    // },
-    // {
-    //     to: "/styles",
-    //     label: "Styles",
-    //     icon: mdiPalette
-    // },
-    //     {
-    //         to: "/profile",
-    //         label: "Profile",
-    //         icon: mdiAccountCircle
-    //     },
-    //
-    //     {
-    //         to: "/error",
-    //         label: "Error",
-    //         icon: mdiAlertCircle
-    //     }
-    // {
-    //     label: "Submenus",
-    //     subLabel: "Submenus Example",
-    //     icon: mdiViewList,
-    //     menu: [
-    //         {
-    //             label: "Sub-item One"
-    //         },
-    //         {
-    //             label: "Sub-item Two"
-    //         }
-    //     ]
-    // }
-    // ]
-    // "About",
-    // [
-    //     {
-    //         href: "https://tailwind-vue.justboil.me/",
-    //         label: "Premium version",
-    //         icon: mdiMonitorShimmer,
-    //         target: "_blank"
-    //     },
-    //     {
-    //         href: "https://github.com/justboil/admin-one-vue-tailwind",
-    //         label: "GitHub",
-    //         icon: mdiGithub,
-    //         target: "_blank"
-    //     }
-    // ]
+    {
+        to: "/dashboard",
+        icon: mdiAccountCog,
+        label: `${"Dashboard"}`,
+        role: "superAdmin"
+    },
+    {
+        to: "/allSurveys",
+        icon: mdiAccountCog,
+        label: `${"Surveys"}`,
+        role: "superAdmin"
+    },
+    {
+        to: "/forgotRequests",
+        icon: mdiAccountCog,
+        label: `${"Forgot Requests"}`,
+        role: "superAdmin"
+    }
 ];
+let adminACL = [
+    "General",
+    {
+        to: "/admin/surveys",
+        icon: mdiAccountCog,
+        label: `${"Survey's"}`,
+        role: "admin"
+    },
+    {
+        to: "/admin/takeSurveys",
+        icon: mdiAccountCog,
+        label: `${"Complete Surveys"}`,
+        role: "admin"
+    }
+];
+let userACL = [
+    "General",
+    {
+        to: "/user/dashboard",
+        icon: mdiAccountCog,
+        label: `${"Dashboard"}`,
+        role: "user"
+    },
+    {
+        to: "/addLink",
+        icon: mdiAccountCog,
+        label: `${"Add Survey Link"}`,
+        role: "user"
+    },
+    {
+        to: "/user/about",
+        icon: mdiAccountCog,
+        label: `${"About"}`,
+        role: "user"
+    },
+    {
+        to: "/user/contactUs",
+        icon: mdiAccountCog,
+        label: `${"Contact us"}`,
+        role: "user"
+    },
+    {
+        to: "/user/userAgreement",
+        icon: mdiAccountCog,
+        label: `${"User Agreement"}`,
+        role: "user"
+    }
+];
+if (loggedInUserID === 1) {
+    main = superAdminACL;
+} else if (loggedInUserID === 2) {
+    main = adminACL;
+} else if (loggedInUserID === 3) {
+    main = userACL;
+}
+export default [main];
