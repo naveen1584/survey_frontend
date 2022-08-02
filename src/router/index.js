@@ -1,8 +1,17 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Style from "@/views/StyleView.vue";
 import Home from "@/views/HomeView.vue";
-import AdminVueVue from "@/views/AdminVue.vue";
+import AdminVue from "@/views/AdminVue.vue";
+import CreateSurvey from "@/views/CreateSurvey.vue";
+import TakeSurveyVue from "@/views/TakeSurvey.vue";
 import UserView from "@/views/UserView.vue";
+import TakeSurveyForm from "@/views/TakeSurveyForm.vue";
+import ViewSurveysSuperAdmin from "@/views/ViewSurveysSuperAdmin.vue";
+import CompleteSurveys from "@/views/takedSurveyByAdmin/CompleteSurveys.vue";
+import ForgotPassword from "@/views/ForgotPassword.vue";
+import ResetPassword from "@/views/ResetPassword.vue";
+import ForgotRequest from "@/views/ForgotRequest.vue";
+
 const routes = [
     {
         meta: {
@@ -14,8 +23,6 @@ const routes = [
         component: Style
     },
     {
-        // Document title tag
-        // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
         meta: {
             title: "Dashboard"
         },
@@ -25,36 +32,84 @@ const routes = [
     },
     {
         meta: {
-            title: "Admin"
+            title: "All Surveys"
         },
-        path: "/admin",
-        name: "admin",
-        component: AdminVueVue
+        path: "/allSurveys",
+        name: "allSurveys",
+        component: ViewSurveysSuperAdmin
     },
     {
         meta: {
-            title: "User"
+            title: "Forgot Requests"
         },
-        path: "/user",
+        path: "/forgotRequests",
+        name: "ForgotRequests",
+        component: ForgotRequest
+    },
+    {
+        meta: {
+            title: "User Dashboard"
+        },
+        path: "/user/dashboard",
         name: "user",
         component: UserView
     },
     {
         meta: {
-            title: "Tables"
+            title: "Admin"
         },
-        path: "/tables",
-        name: "tables",
-        component: () => import("@/views/TablesView.vue")
+        path: "/admin/surveys",
+        name: "admin",
+        component: AdminVue
     },
     {
         meta: {
-            title: "Forms"
+            title: "Completed"
         },
-        path: "/forms",
-        name: "forms",
-        component: () => import("@/views/FormsView.vue")
+        path: "/admin/takeSurveys",
+        name: "adminTakeSurveys",
+        component: CompleteSurveys
     },
+    {
+        meta: {
+            title: "Take Survey"
+        },
+        path: "/takeSurvey/:surveyID",
+        name: "takeSurvey",
+        component: TakeSurveyVue
+    },
+    {
+        meta: {
+            title: "Add Survey Link"
+        },
+        path: "/addLink",
+        name: "addLink",
+        component: TakeSurveyForm
+    },
+    {
+        meta: {
+            title: "Create Survey"
+        },
+        path: "/createSurvey",
+        name: "createSurvey",
+        component: CreateSurvey
+    },
+    // {
+    //     meta: {
+    //         title: "Tables"
+    //     },
+    //     path: "/tables",
+    //     name: "tables",
+    //     component: () => import("@/views/TablesView.vue")
+    // },
+    // {
+    //     meta: {
+    //         title: "Forms"
+    //     },
+    //     path: "/forms",
+    //     name: "forms",
+    //     component: () => import("@/views/FormsView.vue")
+    // },
     {
         meta: {
             title: "Profile"
@@ -63,22 +118,22 @@ const routes = [
         name: "profile",
         component: () => import("@/views/ProfileView.vue")
     },
-    {
-        meta: {
-            title: "Ui"
-        },
-        path: "/ui",
-        name: "ui",
-        component: () => import("@/views/UiView.vue")
-    },
-    {
-        meta: {
-            title: "Responsive layout"
-        },
-        path: "/responsive",
-        name: "responsive",
-        component: () => import("@/views/ResponsiveView.vue")
-    },
+    // {
+    //     meta: {
+    //         title: "Ui"
+    //     },
+    //     path: "/ui",
+    //     name: "ui",
+    //     component: () => import("@/views/UiView.vue")
+    // },
+    // {
+    //     meta: {
+    //         title: "Responsive layout"
+    //     },
+    //     path: "/responsive",
+    //     name: "responsive",
+    //     component: () => import("@/views/ResponsiveView.vue")
+    // },
     {
         meta: {
             title: "Login",
@@ -87,6 +142,33 @@ const routes = [
         path: "/",
         name: "login",
         component: () => import("@/views/LoginView.vue")
+    },
+    {
+        meta: {
+            title: "Register",
+            fullScreen: true
+        },
+        path: "/register",
+        name: "register",
+        component: () => import("@/views/Register.vue")
+    },
+    {
+        meta: {
+            title: "Forgot Password",
+            fullScreen: true
+        },
+        path: "/forgotPassword",
+        name: "forgotPassword",
+        component: ForgotPassword
+    },
+    {
+        meta: {
+            title: "Reset Password",
+            fullScreen: true
+        },
+        path: "/resetPassword",
+        name: "resetPassword",
+        component: ResetPassword
     },
     {
         meta: {
