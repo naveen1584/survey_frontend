@@ -135,6 +135,20 @@ if (props.ctrlKFocus) {
             :placeholder="placeholder"
             :required="required"
         />
+
+         <input
+            v-else
+            :id="id"
+            ref="inputEl"
+            v-model="computedValue"
+            :name="name"
+            :inputmode="inputmode"
+            :autocomplete="autocomplete"
+            :required="required"
+            :placeholder="placeholder"
+            :type="computedType"
+            :class="inputElClass"
+        />
       
         <FormControlIcon v-if="icon" :icon="icon" :h="controlIconH" />
     </div>
